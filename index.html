@@ -23,48 +23,41 @@
         .card {
             background: #ffffff;
             width: 100%;
-            max-width: 450px; /* Un poco más ancha para que quepa todo */
+            max-width: 450px;
             padding: 30px 20px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             text-align: center;
         }
-
-        /* Estilo para tu foto personal (arriba, redonda) */
         .profile-photo-container {
             width: 140px;
             height: 140px;
-            margin: 0 auto -60px; /* Sube la foto para que quede sobre la tarjeta */
+            margin: 0 auto -60px;
             border-radius: 50%;
             border: 5px solid #fff;
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
             overflow: hidden;
             position: relative;
-            z-index: 10; /* Asegura que esté encima de lo demás */
+            z-index: 10;
         }
         .profile-photo-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        /* Contenedor principal de la tarjeta (ahora con más padding arriba) */
         .card-content {
-            padding-top: 80px; /* Espacio para que no se tape con la foto */
+            padding-top: 80px;
         }
-
-        /* Estilo para el logotipo de la empresa (pequeño, debajo de la foto) */
         .company-logo-container {
             width: 100%;
             max-width: 180px;
-            margin: 0 auto 15px; /* Espacio debajo del logo */
+            margin: 0 auto 15px;
         }
         .company-logo-container img {
             width: 100%;
             height: auto;
             display: block;
         }
-        
         h1 {
             font-size: 20px;
             color: #111;
@@ -103,7 +96,6 @@
             top: 50%;
             transform: translateY(-50%);
         }
-
         .btn-primary {
             background-color: #0056b3;
             color: #fff;
@@ -135,18 +127,11 @@
 <body>
 
     <div class="card">
-        
-        <!-- FOTO PERSONAL (Arriba, sobresaliendo) -->
-        <!-- CAMBIA 'mi-foto.jpg' por el nombre exacto de tu archivo -->
         <div class="profile-photo-container">
             <img src="mi-foto.jpg" alt="Darwin López">
         </div>
 
-        <!-- CONTENIDO DE LA TARJETA (Inicia debajo de la foto) -->
         <div class="card-content">
-
-            <!-- LOGOTIPO DE LA EMPRESA (Debajo de la foto) -->
-            <!-- CAMBIA 'logo.png' por el nombre exacto de tu archivo -->
             <div class="company-logo-container">
                 <img src="logo.png" alt="López Equipment Services LLC Logotipo">
             </div>
@@ -154,11 +139,10 @@
             <h1>López Equipment Services LLC</h1>
             <p class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
-            <!-- Botones de acción traducidos al inglés -->
             <a href="tel:954-864-8960" class="btn btn-primary">Call: 954-864-8960</a>
             <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn btn-whatsapp" target="_blank">Send WhatsApp</a>
             <a href="mailto:Lopezeqp@gmail.com" class="btn btn-secondary email">Send Email: Lopezeqp@gmail.com</a>
-            <a href="#" class="btn btn-secondary contact">Save Contact</a>
+            <a href="contacto.vcf" class="btn btn-secondary contact" download>Save Contact</a>
 
             <div class="contact-details">
                 <p>Florida, USA</p>
