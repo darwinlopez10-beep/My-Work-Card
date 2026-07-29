@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>López Equipment Services LLC</title>
+    <!-- Librería gratuita para generar códigos QR automáticos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -115,6 +117,25 @@
         .btn-secondary.email::before { content: "📧"; }
         .btn-secondary.contact::before { content: "💾"; }
 
+        .qr-container {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .qr-container p {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        #qrcode img {
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
         .contact-details {
             margin-top: 20px;
             padding-top: 15px;
@@ -144,10 +165,10 @@
             <a href="mailto:Lopezeqp@gmail.com" class="btn btn-secondary email">Send Email: Lopezeqp@gmail.com</a>
             <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn btn-secondary contact">Save Contact</a>
             
-            <!-- SECCIÓN DE CÓDIGO QR -->
-            <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
-                <p style="font-size: 13px; color: #555; margin-bottom: 10px; font-weight: 600;">Scan to share my digital card:</p>
-                <img src="qr.png" alt="Código QR de la tarjeta" style="width: 120px; height: 120px; border-radius: 8px;">
+            <!-- CONTENEDOR AUTOMÁTICO DEL CÓDIGO QR -->
+            <div class="qr-container">
+                <p>Scan to share my digital card:</p>
+                <div id="qrcode"></div>
             </div>
 
             <div class="contact-details">
@@ -155,6 +176,18 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Genera el código QR automáticamente usando la dirección actual de la página
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 130,
+            height: 130,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
 
 </body>
 </html>
