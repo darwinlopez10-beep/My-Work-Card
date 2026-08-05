@@ -52,7 +52,7 @@
         }
         .company-logo-container {
             width: 100%;
-            max-width: 180px;
+            max-width: 250px; /* LOGOTIPO MÁS GRANDE */
             margin: 0 auto 15px;
         }
         .company-logo-container img {
@@ -74,7 +74,7 @@
             padding: 0 10px;
         }
         
-        /* Estilo unificado para todos los botones en color verde */
+        /* Botones verdes unificados y centrados */
         .btn {
             display: flex;
             align-items: center;
@@ -145,7 +145,6 @@
             <h1>López Equipment Services LLC</h1>
             <p class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
-            <!-- Todos los botones centrados y con el mismo tono verde -->
             <a href="tel:954-864-8960" class="btn">
                 <span>📞</span> Call: 954-864-8960
             </a>
@@ -180,7 +179,6 @@
     </div>
 
     <script>
-        // Genera el código QR automáticamente usando la dirección actual de la página
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
             width: 130,
@@ -190,7 +188,6 @@
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        // Función del botón de Share nativo
         document.getElementById('shareButton').addEventListener('click', async () => {
             const shareData = {
                 title: 'López Equipment Services LLC',
