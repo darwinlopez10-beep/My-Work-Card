@@ -175,17 +175,60 @@
     }
 
     function cargarProductos() {
-        const grid = document.getElementById('catalogoGrid');
-        const emptyMsg = document.getElementById('emptyMsg');
-        
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        
-        const tarjetasViejas = grid.querySelectorAll('.producto-card');
-        tarjetasViejas.forEach(card => card.remove());
+    const grid = document.getElementById('catalogoGrid');
+    const emptyMsg = document.getElementById('emptyMsg');
+    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+    
+    grid.querySelectorAll('.producto-card').forEach(card => card.remove());
+    emptyMsg.style.display = productos.length === 0 ? 'block' : 'none';
 
-        if (productos.length === 0) {
-            emptyMsg.style.display = 'block';
-            return;
+    const params = new URLSearchParams(window.location.search);
+    const esAdmin = params.get('admin') === 'true';
+
+    productos.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'producto-card';
+        
+        let adminButtons = '';
+        if (esAdmin) {
+            adminButtons = `
+                <div class="producto-footer">
+                    <button class="btn-editar" onclick="editarProducto(${index})" style="background:orange; color:white;">Editar</button>
+                    <button class="btn-eliminar" onclick="eliminarProducto(${index})" style="background:red; color:white;">Eliminar</button>
+                </div>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="producto-img-container">
+                <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
+            </div>
+            <div class="producto-info">
+                <h3 class="producto-titulo">${p.titulo}</h3>
+                <p class="producto-descripcion">${p.desc}</p>
+                ${adminButtons}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function editarProducto(index) {
+    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+    const p = productos[index];
+    document.getElementById('tituloInput').value = p.titulo;
+    document.getElementById('descInput').value = p.desc;
+    
+    // Eliminamos el viejo para guardar el "editado" como nuevo
+    eliminarProducto(index);
+    window.scrollTo(0, 0); // Sube al formulario para editar
+}
+
+// NUEVA Función para abrir la foto en una ventana nueva
+function abrirFoto(src) {
+    const ventana = window.open("");
+    ventana.document.write(`<img src="${src}" style="width:100%;">`);
+}
         } else {
             emptyMsg.style.display = 'none';
         }
