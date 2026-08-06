@@ -289,5 +289,114 @@ function abrirFoto(src) {
         }
     };
 </script>
+    <script>
+    function agregarProducto() {
+        const titulo = document.getElementById('tituloInput').value;
+        const desc = document.getElementById('descInput').value;
+        const imgInput = document.getElementById('imgInput');
+
+        if (!titulo || !desc) {
+            alert("Por favor completa al menos el título y la descripción.");
+            return;
+        }
+
+        if (imgInput.files && imgInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                guardarYRenderizar(titulo, desc, e.target.result);
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        } else {
+            guardarYRenderizar(titulo, desc, "");
+        }
+    }
+
+    function guardarYRenderizar(titulo, desc, imagen) {
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        productos.push({ titulo, desc, imagen });
+        localStorage.setItem('misProductos', JSON.stringify(productos));
+        
+        limpiarFormulario();
+        cargarProductos();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('tituloInput').value = '';
+        document.getElementById('descInput').value = '';
+        document.getElementById('imgInput').value = '';
+    }
+
+    function cargarProductos() {
+        const grid = document.getElementById('catalogoGrid');
+        const emptyMsg = document.getElementById('emptyMsg');
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        
+        grid.querySelectorAll('.producto-card').forEach(card => card.remove());
+        emptyMsg.style.display = productos.length === 0 ? 'block' : 'none';
+
+        const params = new URLSearchParams(window.location.search);
+        const esAdmin = params.get('admin') === 'true';
+
+        productos.forEach((p, index) => {
+            const card = document.createElement('div');
+            card.className = 'producto-card';
+            
+            let adminButtons = '';
+            if (esAdmin) {
+                adminButtons = `
+                    <div class="producto-footer">
+                        <button class="btn-editar" onclick="editarProducto(${index})" style="background:orange; color:white; padding:8px 15px; border:none; border-radius:5px; cursor:pointer; margin-right:5px;">Editar</button>
+                        <button class="btn-eliminar" onclick="eliminarProducto(${index})" style="background:red; color:white; padding:8px 15px; border:none; border-radius:5px; cursor:pointer;">Eliminar</button>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="producto-img-container">
+                    <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">${p.titulo}</h3>
+                    <p class="producto-descripcion">${p.desc}</p>
+                    ${adminButtons}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function editarProducto(index) {
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        const p = productos[index];
+        document.getElementById('tituloInput').value = p.titulo;
+        document.getElementById('descInput').value = p.desc;
+        
+        eliminarProducto(index);
+        window.scrollTo(0, 0);
+    }
+
+    function eliminarProducto(index) {
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        productos.splice(index, 1);
+        localStorage.setItem('misProductos', JSON.stringify(productos));
+        cargarProductos();
+    }
+
+    function abrirFoto(src) {
+        const ventana = window.open("");
+        ventana.document.write(`<img src="${src}" style="width:100%;">`);
+    }
+
+    window.onload = function() {
+        cargarProductos();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === 'true') {
+            const panel = document.getElementById('admin-panel');
+            if (panel) {
+                panel.style.display = 'block';
+            }
+        }
+    };
+</script>
 </body>
 </html>
