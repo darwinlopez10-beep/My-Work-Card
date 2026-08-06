@@ -219,6 +219,29 @@ function editarProducto(index) {
     document.getElementById('tituloInput').value = p.titulo;
     document.getElementById('descInput').value = p.desc;
     
+    eliminarProducto(index);
+    window.scrollTo(0, 0);
+}
+
+function abrirFoto(src) {
+    const ventana = window.open("");
+    ventana.document.write(`<img src="${src}" style="width:100%;">`);
+}
+                <h3 class="producto-titulo">${p.titulo}</h3>
+                <p class="producto-descripcion">${p.desc}</p>
+                ${adminButtons}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function editarProducto(index) {
+    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+    const p = productos[index];
+    document.getElementById('tituloInput').value = p.titulo;
+    document.getElementById('descInput').value = p.desc;
+    
     // Eliminamos el viejo para guardar el "editado" como nuevo
     eliminarProducto(index);
     window.scrollTo(0, 0); // Sube al formulario para editar
