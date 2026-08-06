@@ -3,179 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo - Artículos y Variedades</title>
+    <title>Mi Catálogo - Marketplace</title>
     <style>
         :root {
             --primary-color: #1b263b;
             --whatsapp-color: #25d366;
             --whatsapp-hover: #1ebe5d;
+            --danger-color: #e63946;
+            --danger-hover: #d90429;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #333333;
             --text-muted: #666666;
             --border-radius: 10px;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .back-btn-container {
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-        }
-
-        .btn-volver {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background 0.2s;
-        }
-
-        .btn-volver:hover {
-            background-color: #2c3e50;
-        }
-
-        .catalogo-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .producto-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .producto-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        }
-
-        .producto-img-container {
-            width: 100%;
-            height: 220px;
-            background-color: #e2e8f0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .producto-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .placeholder-img {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            font-size: 0.9rem;
-            background: #e9ecef;
-        }
-
-        .producto-info {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .producto-titulo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .producto-descripcion {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .producto-footer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: auto;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-
-        .btn-pedido {
-            background-color: var(--whatsapp-color);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            transition: background 0.2s;
-            text-align: center;
-        }
-
-        .btn-pedido:hover {
-            background-color: var(--whatsapp-hover);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding: 20px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid #e2e8f0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 20px; }
+        header { text-align: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
+        header h1 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px; }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+        .back-btn-container { max-width: 1200px; margin: 0 auto 20px auto; }
+        .btn-volver { display: inline-block; background-color: var(--primary-color); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+        .btn-volver:hover { background-color: #2c3e50; }
+        #admin-panel { background: #ffffff; border: 2px dashed #00b4d8; padding: 20px; border-radius: var(--border-radius); max-width: 800px; margin: 0 auto 40px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        #admin-panel h2 { font-size: 1.3rem; color: var(--primary-color); margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; }
+        .btn-agregar { background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-agregar:hover { background-color: #2c3e50; }
+        .catalogo-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+        .producto-card { background: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; }
+        .producto-img-container { width: 100%; height: 220px; background-color: #e2e8f0; position: relative; overflow: hidden; }
+        .producto-img { width: 100%; height: 100%; object-fit: cover; }
+        .producto-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+        .producto-titulo { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
+        .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; flex-grow: 1; }
+        .producto-footer { display: flex; flex-direction: column; gap: 10px; margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn-pedido { background-color: var(--whatsapp-color); color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+        .btn-pedido:hover { background-color: var(--whatsapp-hover); }
+        .btn-eliminar { background-color: var(--danger-color); color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+        .btn-eliminar:hover { background-color: var(--danger-hover); }
+        .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
+        footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
 <body>
@@ -189,64 +59,83 @@
         <p>Electrónica, accesorios, ropa, calzado y más</p>
     </header>
 
-    <div class="catalogo-container">
-        
-        <!-- Producto 1: Televisor -->
-        <div class="producto-card">
-            <div class="producto-img-container">
-                <img src="tv.jpg" alt="Televisor Usado" class="producto-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="placeholder-img" style="display:none;">Foto de Televisor</div>
-            </div>
-            <div class="producto-info">
-                <h3 class="producto-titulo">Televisor Smart TV Usado</h3>
-                <p class="producto-descripcion">En excelente estado, probado y funcionando perfectamente con su control remoto original.</p>
-                <div class="producto-footer">
-                    <a href="https://wa.me/19548648960?text=Hola,%20vi%20el%20televisor%20en%20el%20catálogo%20y%20quiero%20saber%20precio%20y%20detalles." target="_blank" class="btn-pedido">
-                        Consultar por WhatsApp
-                    </a>
-                </div>
-            </div>
+    <div id="admin-panel">
+        <h2>🛠️ Panel de Control (Agregar Producto)</h2>
+        <div class="form-group">
+            <label for="tituloInput">Título del Artículo</label>
+            <input type="text" id="tituloInput" placeholder="Ej: Televisor Smart TV">
         </div>
-
-        <!-- Producto 2: Controles / Accesorios -->
-        <div class="producto-card">
-            <div class="producto-img-container">
-                <img src="controles.jpg" alt="Controles Remotos y Accesorios" class="producto-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="placeholder-img" style="display:none;">Foto de Accesorios</div>
-            </div>
-            <div class="producto-info">
-                <h3 class="producto-titulo">Controles Remotos y Accesorios</h3>
-                <p class="producto-descripcion">Variedad de controles universales, cables, cargadores y accesorios para celulares.</p>
-                <div class="producto-footer">
-                    <a href="https://wa.me/19548648960?text=Hola,%20estoy%20interesado%20en%20los%20controles%20o%20accesorios.%20¿Qué%20modelos%20tienes?" target="_blank" class="btn-pedido">
-                        Consultar por WhatsApp
-                    </a>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="descInput">Descripción</label>
+            <textarea id="descInput" rows="2" placeholder="Detalles del estado, modelo, etc."></textarea>
         </div>
-
-        <!-- Producto 3: Aspiradora / Vacuum -->
-        <div class="producto-card">
-            <div class="producto-img-container">
-                <img src="vacuum.jpg" alt="Vacuum / Aspiradora" class="producto-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="placeholder-img" style="display:none;">Foto de Aspiradora</div>
-            </div>
-            <div class="producto-info">
-                <h3 class="producto-titulo">Aspiradora / Vacuum</h3>
-                <p class="producto-descripcion">Equipos de limpieza prácticos, con potencia comprobada y listos para usar.</p>
-                <div class="producto-footer">
-                    <a href="https://wa.me/19548648960?text=Hola,%20me%20interesa%20la%20aspiradora%20del%20catálogo.%20¿Cuál%20es%20el%20precio?" target="_blank" class="btn-pedido">
-                        Consultar por WhatsApp
-                    </a>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="imgInput">Foto del Artículo</label>
+            <input type="file" id="imgInput" accept="image/*">
         </div>
+        <button class="btn-agregar" onclick="agregarProducto()">+ Agregar al Catálogo</button>
+    </div>
 
+    <div class="catalogo-container" id="catalogoGrid">
+        <div class="empty-msg" id="emptyMsg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>
     </div>
 
     <footer>
         <p>&copy; 2026 - Todos los derechos reservados</p>
     </footer>
 
+    <script>
+        let productos = [];
+        function agregarProducto() {
+            const titulo = document.getElementById('tituloInput').value.trim();
+            const desc = document.getElementById('descInput').value.trim();
+            const imgFile = document.getElementById('imgInput').files[0];
+            if (!titulo || !imgFile) {
+                alert("Por favor, ponle un título y selecciona una foto.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                productos.push({ id: Date.now(), titulo, desc: desc || "Disponible en excelente estado.", imagen: e.target.result });
+                guardarYRenderizar();
+                limpiarFormulario();
+            };
+            reader.readAsDataURL(imgFile);
+        }
+        function eliminarProducto(id) {
+            productos = productos.filter(p => p.id !== id);
+            guardarYRenderizar();
+        }
+        function guardarYRenderizar() {
+            const grid = document.getElementById('catalogoGrid');
+            grid.innerHTML = '';
+            if (productos.length === 0) {
+                grid.innerHTML = '<div class="empty-msg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>';
+                return;
+            }
+            productos.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'producto-card';
+                const msg = encodeURIComponent(`Hola, vi el artículo "${p.titulo}" en el catálogo y quiero consultar disponibilidad.`);
+                card.innerHTML = `
+                    <div class="producto-img-container"><img src="${p.imagen}" class="producto-img"></div>
+                    <div class="producto-info">
+                        <h3 class="producto-titulo">${p.titulo}</h3>
+                        <p class="producto-descripcion">${p.desc}</p>
+                        <div class="producto-footer">
+                            <a href="https://wa.me/19548648960?text=${msg}" target="_blank" class="btn-pedido">Consultar por WhatsApp</a>
+                            <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Eliminar artículo</button>
+                        </div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+        function limpiarFormulario() {
+            document.getElementById('tituloInput').value = '';
+            document.getElementById('descInput').value = '';
+            document.getElementById('imgInput').value = '';
+        }
+    </script>
 </body>
 </html>
+
