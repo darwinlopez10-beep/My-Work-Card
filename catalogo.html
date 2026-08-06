@@ -60,7 +60,7 @@
     </header>
 
     <div id="admin-panel">
-        <h2>🛠️ Panel de Control (Agregar Producto)</h2>
+        <div id="admin-panel" style="display: none;">
         <div class="form-group">
             <label for="tituloInput">Título del Artículo</label>
             <input type="text" id="tituloInput" placeholder="Ej: Televisor Smart TV">
@@ -136,6 +136,13 @@
             document.getElementById('imgInput').value = '';
         }
     </script>
+
+    <!-- Pégalo aquí abajo, justo antes de cerrar el body -->
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === 'true') {
+            document.getElementById('admin-panel').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
-
