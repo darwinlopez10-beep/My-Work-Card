@@ -81,9 +81,7 @@
     </footer>
 
     <script>
-        
-             <script>
-        const GOOGLE_SCRIPT_URL = const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdPLMqtmGkqeIm9fZu1L-tjMoyUZLT_Uynu8ky3GlycnzY2Pp11onP2tNLkVldq3D7/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdPLMqtmGkqeIm9fZu1L-tjMoyUZLT_Uynu8ky3GlycnzY2Pp11onP2tNLkVldq3D7/exec";
 
         function cargarProductos() {
             const grid = document.getElementById('catalogoGrid');
@@ -100,7 +98,7 @@
 
                     productos.forEach((p) => {
                         const card = document.createElement('div');
-                        card.className = 'producto-card';           
+                        card.className = 'producto-card';            
                         let adminButtons = '';
                         if (esAdmin) {
                             adminButtons = `
