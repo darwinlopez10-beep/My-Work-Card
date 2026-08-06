@@ -40,10 +40,6 @@
         .producto-titulo { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
         .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; flex-grow: 1; }
         .producto-footer { display: flex; flex-direction: column; gap: 10px; margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; }
-        .btn-pedido { background-color: var(--whatsapp-color); color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; }
-        .btn-pedido:hover { background-color: var(--whatsapp-hover); }
-        .btn-eliminar { background-color: var(--danger-color); color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
-        .btn-eliminar:hover { background-color: var(--danger-hover); }
         .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
         footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
     </style>
@@ -59,8 +55,8 @@
         <p>Electrónica, accesorios, ropa, calzado y más</p>
     </header>
 
-        <div id="admin-panel" style="display: none;">
-          <h2>🛠️ Admin Panel (Add Product)</h2>
+    <div id="admin-panel" style="display: none;">
+        <h2>🛠️ Admin Panel (Sincronizado en la Nube)</h2>
         <div class="form-group">
             <label for="tituloInput">Título del Artículo</label>
             <input type="text" id="tituloInput" placeholder="Ej: Televisor Smart TV">
@@ -85,318 +81,110 @@
     </footer>
 
     <script>
-        let productos = [];
-        function agregarProducto() {
-            const titulo = document.getElementById('tituloInput').value.trim();
-            const desc = document.getElementById('descInput').value.trim();
-            const imgFile = document.getElementById('imgInput').files[0];
-            if (!titulo || !imgFile) {
-                alert("Por favor, ponle un título y selecciona una foto.");
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                productos.push({ id: Date.now(), titulo, desc: desc || "Disponible en excelente estado.", imagen: e.target.result });
-                guardarYRenderizar();
-                limpiarFormulario();
-            };
-            reader.readAsDataURL(imgFile);
-        }
-        function eliminarProducto(id) {
-            productos = productos.filter(p => p.id !== id);
-            guardarYRenderizar();
-        }
-        function guardarYRenderizar() {
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWBseNfypVGE99cl0S9ALb6YokGZ7E7PZIFtUNkGgCIuD7EgoB6XaaQgklMYfliygO/exec";
+
+        function cargarProductos() {
             const grid = document.getElementById('catalogoGrid');
-            grid.innerHTML = '';
-            if (productos.length === 0) {
-                grid.innerHTML = '<div class="empty-msg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>';
+            const emptyMsg = document.getElementById('emptyMsg');
+            
+            fetch(GOOGLE_SCRIPT_URL)
+                .then(response => response.json())
+                .then(productos => {
+                    grid.querySelectorAll('.producto-card').forEach(card => card.remove());
+                    emptyMsg.style.display = (productos.length === 0) ? 'block' : 'none';
+
+                    const params = new URLSearchParams(window.location.search);
+                    const esAdmin = params.get('admin') === 'true';
+
+                    productos.forEach((p) => {
+                        const card = document.createElement('div');
+                        card.className = 'producto-card';
+                        
+                        let adminButtons = '';
+                        if (esAdmin) {
+                            adminButtons = `
+                                <div class="producto-footer">
+                                    <span style="font-size:0.8rem; color:#666; text-align:center;">Para eliminar o editar, hazlo directamente en tu Google Sheet.</span>
+                                </div>
+                            `;
+                        }
+
+                        card.innerHTML = `
+                            <div class="producto-img-container">
+                                <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
+                            </div>
+                            <div class="producto-info">
+                                <h3 class="producto-titulo">${p.titulo}</h3>
+                                <p class="producto-descripcion">${p.desc}</p>
+                                ${adminButtons}
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar desde Google Sheets:", error);
+                });
+        }
+
+        function agregarProducto() {
+            const titulo = document.getElementById('tituloInput').value;
+            const desc = document.getElementById('descInput').value;
+            const imgInput = document.getElementById('imgInput');
+
+            if (!titulo || !desc) {
+                alert("Por favor completa al menos el título y la descripción.");
                 return;
             }
-            productos.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'producto-card';
-                const msg = encodeURIComponent(`Hola, vi el artículo "${p.titulo}" en el catálogo y quiero consultar disponibilidad.`);
-                card.innerHTML = `
-                    <div class="producto-img-container"><img src="${p.imagen}" class="producto-img"></div>
-                    <div class="producto-info">
-                        <h3 class="producto-titulo">${p.titulo}</h3>
-                        <p class="producto-descripcion">${p.desc}</p>
-                        <div class="producto-footer">
-                            <a href="https://wa.me/19548648960?text=${msg}" target="_blank" class="btn-pedido">Consultar por WhatsApp</a>
-                            <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Eliminar artículo</button>
-                        </div>
-                    </div>`;
-                grid.appendChild(card);
+
+            if (imgInput.files && imgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    guardarEnNube(titulo, desc, e.target.result);
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            } else {
+                guardarEnNube(titulo, desc, "");
+            }
+        }
+
+        function guardarEnNube(titulo, desc, imagen) {
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ titulo, desc, imagen })
+            }).then(() => {
+                alert("¡Artículo agregado a la nube con éxito! Se actualizará en todos tus dispositivos.");
+                limpiarFormulario();
+                setTimeout(cargarProductos, 1500);
+            }).catch(error => {
+                console.error("Error al guardar:", error);
+                alert("Hubo un error al guardar en la nube.");
             });
         }
+
         function limpiarFormulario() {
             document.getElementById('tituloInput').value = '';
             document.getElementById('descInput').value = '';
             document.getElementById('imgInput').value = '';
         }
+
+        function abrirFoto(src) {
+            const ventana = window.open("");
+            ventana.document.write(`<img src="${src}" style="width:100%;">`);
+        }
+
+        window.onload = function() {
+            cargarProductos();
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('admin') === 'true') {
+                const panel = document.getElementById('admin-panel');
+                if (panel) {
+                    panel.style.display = 'block';
+                }
+            }
+        };
     </script>
-
-    <script>
-    function agregarProducto() {
-        const titulo = document.getElementById('tituloInput').value;
-        const desc = document.getElementById('descInput').value;
-        const imgInput = document.getElementById('imgInput');
-
-        if (!titulo || !desc) {
-            alert("Por favor completa al menos el título y la descripción.");
-            return;
-        }
-
-        if (imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                guardarYRenderizar(titulo, desc, e.target.result);
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            guardarYRenderizar(titulo, desc, "");
-        }
-    }
-
-    function guardarYRenderizar(titulo, desc, imagen) {
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        productos.push({ titulo, desc, imagen });
-        localStorage.setItem('misProductos', JSON.stringify(productos));
-        
-        limpiarFormulario();
-        cargarProductos();
-    }
-
-    function limpiarFormulario() {
-        document.getElementById('tituloInput').value = '';
-        document.getElementById('descInput').value = '';
-        document.getElementById('imgInput').value = '';
-    }
-
-    function cargarProductos() {
-    const grid = document.getElementById('catalogoGrid');
-    const emptyMsg = document.getElementById('emptyMsg');
-    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-    
-    grid.querySelectorAll('.producto-card').forEach(card => card.remove());
-    emptyMsg.style.display = productos.length === 0 ? 'block' : 'none';
-
-    const params = new URLSearchParams(window.location.search);
-    const esAdmin = params.get('admin') === 'true';
-
-    productos.forEach((p, index) => {
-        const card = document.createElement('div');
-        card.className = 'producto-card';
-        
-        let adminButtons = '';
-        if (esAdmin) {
-            adminButtons = `
-                <div class="producto-footer">
-                    <button class="btn-editar" onclick="editarProducto(${index})" style="background:orange; color:white;">Editar</button>
-                    <button class="btn-eliminar" onclick="eliminarProducto(${index})" style="background:red; color:white;">Eliminar</button>
-                </div>
-            `;
-        }
-
-        card.innerHTML = `
-            <div class="producto-img-container">
-                <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
-            </div>
-            <div class="producto-info">
-                <h3 class="producto-titulo">${p.titulo}</h3>
-                <p class="producto-descripcion">${p.desc}</p>
-                ${adminButtons}
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function editarProducto(index) {
-    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-    const p = productos[index];
-    document.getElementById('tituloInput').value = p.titulo;
-    document.getElementById('descInput').value = p.desc;
-    
-    eliminarProducto(index);
-    window.scrollTo(0, 0);
-}
-
-function abrirFoto(src) {
-    const ventana = window.open("");
-    ventana.document.write(`<img src="${src}" style="width:100%;">`);
-}
-                <h3 class="producto-titulo">${p.titulo}</h3>
-                <p class="producto-descripcion">${p.desc}</p>
-                ${adminButtons}
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function editarProducto(index) {
-    let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-    const p = productos[index];
-    document.getElementById('tituloInput').value = p.titulo;
-    document.getElementById('descInput').value = p.desc;
-    
-    // Eliminamos el viejo para guardar el "editado" como nuevo
-    eliminarProducto(index);
-    window.scrollTo(0, 0); // Sube al formulario para editar
-}
-
-// NUEVA Función para abrir la foto en una ventana nueva
-function abrirFoto(src) {
-    const ventana = window.open("");
-    ventana.document.write(`<img src="${src}" style="width:100%;">`);
-}
-        } else {
-            emptyMsg.style.display = 'none';
-        }
-
-        productos.forEach((p, index) => {
-            const card = document.createElement('div');
-            card.className = 'producto-card';
-            
-            card.innerHTML = `
-                <div class="producto-img-container"><img src="${p.imagen}" class="producto-img"></div>
-                <div class="producto-info">
-                    <h3 class="producto-titulo">${p.titulo}</h3>
-                    <p class="producto-descripcion">${p.desc}</p>
-                    <div class="producto-footer">
-                        <button class="btn-eliminar" onclick="eliminarProducto(${index})">Eliminar artículo</button>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function eliminarProducto(index) {
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        productos.splice(index, 1);
-        localStorage.setItem('misProductos', JSON.stringify(productos));
-        cargarProductos();
-    }
-
-    window.onload = function() {
-        cargarProductos();
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('admin') === 'true') {
-            document.getElementById('admin-panel').style.display = 'block';
-        }
-    };
-</script>
-    <script>
-    function agregarProducto() {
-        const titulo = document.getElementById('tituloInput').value;
-        const desc = document.getElementById('descInput').value;
-        const imgInput = document.getElementById('imgInput');
-
-        if (!titulo || !desc) {
-            alert("Por favor completa al menos el título y la descripción.");
-            return;
-        }
-
-        if (imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                guardarYRenderizar(titulo, desc, e.target.result);
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            guardarYRenderizar(titulo, desc, "");
-        }
-    }
-
-    function guardarYRenderizar(titulo, desc, imagen) {
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        productos.push({ titulo, desc, imagen });
-        localStorage.setItem('misProductos', JSON.stringify(productos));
-        
-        limpiarFormulario();
-        cargarProductos();
-    }
-
-    function limpiarFormulario() {
-        document.getElementById('tituloInput').value = '';
-        document.getElementById('descInput').value = '';
-        document.getElementById('imgInput').value = '';
-    }
-
-    function cargarProductos() {
-        const grid = document.getElementById('catalogoGrid');
-        const emptyMsg = document.getElementById('emptyMsg');
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        
-        grid.querySelectorAll('.producto-card').forEach(card => card.remove());
-        emptyMsg.style.display = productos.length === 0 ? 'block' : 'none';
-
-        const params = new URLSearchParams(window.location.search);
-        const esAdmin = params.get('admin') === 'true';
-
-        productos.forEach((p, index) => {
-            const card = document.createElement('div');
-            card.className = 'producto-card';
-            
-            let adminButtons = '';
-            if (esAdmin) {
-                adminButtons = `
-                    <div class="producto-footer">
-                        <button class="btn-editar" onclick="editarProducto(${index})" style="background:orange; color:white; padding:8px 15px; border:none; border-radius:5px; cursor:pointer; margin-right:5px;">Editar</button>
-                        <button class="btn-eliminar" onclick="eliminarProducto(${index})" style="background:red; color:white; padding:8px 15px; border:none; border-radius:5px; cursor:pointer;">Eliminar</button>
-                    </div>
-                `;
-            }
-
-            card.innerHTML = `
-                <div class="producto-img-container">
-                    <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-titulo">${p.titulo}</h3>
-                    <p class="producto-descripcion">${p.desc}</p>
-                    ${adminButtons}
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function editarProducto(index) {
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        const p = productos[index];
-        document.getElementById('tituloInput').value = p.titulo;
-        document.getElementById('descInput').value = p.desc;
-        
-        eliminarProducto(index);
-        window.scrollTo(0, 0);
-    }
-
-    function eliminarProducto(index) {
-        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
-        productos.splice(index, 1);
-        localStorage.setItem('misProductos', JSON.stringify(productos));
-        cargarProductos();
-    }
-
-    function abrirFoto(src) {
-        const ventana = window.open("");
-        ventana.document.write(`<img src="${src}" style="width:100%;">`);
-    }
-
-    window.onload = function() {
-        cargarProductos();
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('admin') === 'true') {
-            const panel = document.getElementById('admin-panel');
-            if (panel) {
-                panel.style.display = 'block';
-            }
-        }
-    };
-</script>
 </body>
 </html>
