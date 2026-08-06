@@ -137,12 +137,91 @@
         }
     </script>
 
-    <!-- Pégalo aquí abajo, justo antes de cerrar el body -->
     <script>
+    function agregarProducto() {
+        const titulo = document.getElementById('tituloInput').value;
+        const desc = document.getElementById('descInput').value;
+        const imgInput = document.getElementById('imgInput');
+
+        if (!titulo || !desc) {
+            alert("Por favor completa al menos el título y la descripción.");
+            return;
+        }
+
+        if (imgInput.files && imgInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                guardarYRenderizar(titulo, desc, e.target.result);
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        } else {
+            guardarYRenderizar(titulo, desc, "");
+        }
+    }
+
+    function guardarYRenderizar(titulo, desc, imagen) {
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        productos.push({ titulo, desc, imagen });
+        localStorage.setItem('misProductos', JSON.stringify(productos));
+        
+        limpiarFormulario();
+        cargarProductos();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('tituloInput').value = '';
+        document.getElementById('descInput').value = '';
+        document.getElementById('imgInput').value = '';
+    }
+
+    function cargarProductos() {
+        const grid = document.getElementById('catalogoGrid');
+        const emptyMsg = document.getElementById('emptyMsg');
+        
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        
+        const tarjetasViejas = grid.querySelectorAll('.producto-card');
+        tarjetasViejas.forEach(card => card.remove());
+
+        if (productos.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        } else {
+            emptyMsg.style.display = 'none';
+        }
+
+        productos.forEach((p, index) => {
+            const card = document.createElement('div');
+            card.className = 'producto-card';
+            
+            card.innerHTML = `
+                <div class="producto-img-container"><img src="${p.imagen}" class="producto-img"></div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">${p.titulo}</h3>
+                    <p class="producto-descripcion">${p.desc}</p>
+                    <div class="producto-footer">
+                        <button class="btn-eliminar" onclick="eliminarProducto(${index})">Eliminar artículo</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function eliminarProducto(index) {
+        let productos = JSON.parse(localStorage.getItem('misProductos')) || [];
+        productos.splice(index, 1);
+        localStorage.setItem('misProductos', JSON.stringify(productos));
+        cargarProductos();
+    }
+
+    window.onload = function() {
+        cargarProductos();
         const params = new URLSearchParams(window.location.search);
         if (params.get('admin') === 'true') {
             document.getElementById('admin-panel').style.display = 'block';
         }
-    </script>
+    };
+</script>
 </body>
 </html>
