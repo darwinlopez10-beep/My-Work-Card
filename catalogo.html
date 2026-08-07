@@ -126,27 +126,6 @@
                 });
         }
 
-        function agregarProducto() {
-            const titulo = document.getElementById('tituloInput').value;
-            const desc = document.getElementById('descInput').value;
-            const imgInput = document.getElementById('imgInput');
-
-            if (!titulo || !desc) {
-                alert("Por favor completa al menos el título y la descripción.");
-                return;
-            }
-
-            if (imgInput.files && imgInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    guardarEnNube(titulo, desc, e.target.result);
-                };
-                reader.readAsDataURL(imgInput.files[0]);
-            } else {
-                guardarEnNube(titulo, desc, "");
-            }
-        }
-
         function guardarEnNube(titulo, desc, imagen) {
     fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
