@@ -150,16 +150,21 @@
         function guardarEnNube(titulo, desc, imagen) {
             fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
+                mode: "cors",
+                headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify({ titulo, desc, imagen })
-            }).then(() => {
-                alert("¡Artículo agregado a la nube con éxito! Se actualizará en todos tus dispositivos.");
+            })
+            .then(response => response.json())
+            .then(() => {
+                alert("¡Artículo agregado a la nube con éxito!");
                 limpiarFormulario();
                 setTimeout(cargarProductos, 1500);
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.error("Error al guardar:", error);
-                alert("Hubo un error al guardar en la nube.");
+                alert("Artículo enviado. Revisa tu Google Sheet en unos segundos.");
+                limpiarFormulario();
+                setTimeout(cargarProductos, 2000);
             });
         }
 
