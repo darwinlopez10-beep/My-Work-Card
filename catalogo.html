@@ -126,10 +126,10 @@
                 });
         }
 
-        function guardarEnNube(titulo, desc, imagen) {
+        function guardarEnNube(titulo, desc, imagen, imagen 2) {
     fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ titulo, desc, imagen })
+        body: JSON.stringify({ titulo, desc, imagen, imagen 2 })
     })
     .then(response => response.json())
     .then(data => {
