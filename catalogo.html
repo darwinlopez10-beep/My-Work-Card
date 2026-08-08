@@ -116,7 +116,7 @@
 
                         card.innerHTML = `
                             <div class="producto-img-container">
-                                <a href="#" onclick="let w = window.open('', '_blank'); w.document.write('<html><body style=\'margin:0;background:#fff;display:flex;justify-content:center;align-items:center;height:100vh;\'><img src=\'${primeraImg}\' style=\'max-width:100%;max-height:100%;object-fit:contain;\'></body></html>'); return false;">
+                                <a href="#" onclick="let activeImg = this.querySelector('img:not([style*=\'display: none\'])').src; let w = window.open('', '_blank'); w.document.write('<html><body style=\'margin:0;background:#fff;display:flex;justify-content:center;align-items:center;height:100vh;\'><img src=\'' + activeImg + '\' style=\'max-width:100%;max-height:100%;object-fit:contain;\'></body></html>'); return false;">
                                     <div class="carousel" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
                                         ${imagenesArray.map((img, i) => {
                                             let imgUrl = img;
@@ -127,7 +127,7 @@
                                         }).join('')}
                                     </div>
                                 </a>
-                                <button onclick="let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 6px 10px; cursor: pointer; border-radius: 50%; z-index: 10;">❯</button>
+                                <button onclick="event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 6px 10px; cursor: pointer; border-radius: 50%; z-index: 10;">❯</button>
                             </div>
                             <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
