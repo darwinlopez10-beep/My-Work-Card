@@ -35,7 +35,7 @@
         .catalogo-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
         .producto-card { background: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; }
         
-        .producto-img-container { width: 100%; height: 300px; background-color: #e2e8f0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .producto-img-container { width: 100%; height: 300px; background-color: #e2e8f0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .producto-img { width: 100%; height: 100%; object-fit: cover; }
         
         .producto-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
@@ -85,6 +85,50 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
 
+        // Función para abrir la foto activa en una pestaña limpia con fondo blanco
+        function abrirFotoLimpia(contenedor) {
+            const fotoActiva = contenedor.querySelector('img:not([style*="display: none"])');
+            if (!fotoActiva) return;
+
+            const urlFoto = fotoActiva.src;
+            const nuevaVentana = window.open('', '_blank');
+
+            if (nuevaVentana) {
+                nuevaVentana.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Vista Previa</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                background-color: #ffffff;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                min-height: 100vh;
+                                cursor: pointer;
+                            }
+                            img {
+                                max-width: 95%;
+                                max-height: 95vh;
+                                object-fit: contain;
+                                border-radius: 4px;
+                            }
+                        </style>
+                    </head>
+                    <body onclick="window.close();">
+                        <img src="${urlFoto}" referrerpolicy="no-referrer" alt="Foto">
+                    </body>
+                    </html>
+                `);
+                nuevaVentana.document.close();
+            }
+        }
+
         function cargarProductos() {
             const grid = document.getElementById('catalogoGrid');
             const emptyMsg = document.getElementById('emptyMsg');
@@ -113,7 +157,7 @@
                         let imagenesArray = p.imagen.split(',').map(img => img.trim());
 
                         card.innerHTML = `
-                            <div class="producto-img-container">
+                            <div class="producto-img-container" onclick="abrirFotoLimpia(this)">
                                 <div class="carousel" style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                     ${imagenesArray.map((img, i) => {
                                         let imgUrl = img;
@@ -123,7 +167,7 @@
                                         return `<img src="${imgUrl}" class="producto-img" style="display: ${i === 0 ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover;">`;
                                     }).join('')}
                                 </div>
-                                <button type="button" onclick="event.preventDefault(); event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10; font-size: 1rem;">❯</button>
+                                <button type="button" onclick="event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10; font-size: 1rem;">❯</button>
                             </div>
                             <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
