@@ -45,39 +45,39 @@
         .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
         footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
 
-        /* Estilos del Visor en Pantalla Completa (Lightbox) */
+        /* Estilos del Visor en Pantalla Completa (Lightbox Mejorado) */
         #lightboxModal {
             display: none;
             position: fixed;
             z-index: 99999;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
             justify-content: center;
             align-items: center;
         }
         .lightbox-content {
             position: relative;
-            max-width: 90%;
-            max-height: 90vh;
+            width: 85vw;
+            height: 85vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .lightbox-content img {
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 100%;
             object-fit: contain;
-            border-radius: 4px;
+            border-radius: 6px;
         }
         .lightbox-cerrar {
             position: absolute;
             top: 20px;
             right: 30px;
             color: #fff;
-            font-size: 45px;
+            font-size: 50px;
             font-weight: bold;
             cursor: pointer;
             z-index: 100000;
@@ -86,26 +86,21 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 12px 18px;
+            padding: 15px 20px;
             cursor: pointer;
             border-radius: 50%;
-            font-size: 1.5rem;
+            font-size: 2rem;
             z-index: 100000;
             transition: background 0.2s;
         }
         .lightbox-btn:hover {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.5);
         }
-        .lightbox-prev { left: -60px; }
-        .lightbox-next { right: -60px; }
-
-        @media(max-width: 768px) {
-            .lightbox-prev { left: 10px; }
-            .lightbox-next { right: 10px; }
-        }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
     </style>
 </head>
 <body>
@@ -157,7 +152,6 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
 
-        // Variables globales para controlar el visor en grande
         let lightboxImgs = [];
         let lightboxIndex = 0;
 
