@@ -108,11 +108,23 @@
                             `;
                         }
 
+                        let imagenesArray = p.imagen.split(',').map(img => img.trim());
+                        let primeraImg = imagenesArray[0];
+                        if (primeraImg.includes('imgur.com') && !primeraImg.includes('i.imgur.com')) {
+                            primeraImg = primeraImg.replace('imgur.com/', 'i.imgur.com/') + '.jpg';
+                        }
+
                         card.innerHTML = `
                             <div class="producto-img-container">
-                                <a href="${p.imagen.split(',')[0].trim()}" target="_blank">
+                                <a href="${primeraImg}" target="_blank">
                                     <div class="carousel" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-                                        <a href="${p.imagen.split(',')[0].trim()}" target="_blank" rel="noopener">
+                                        ${imagenesArray.map((img, i) => {
+                                            let imgUrl = img;
+                                            if (imgUrl.includes('imgur.com') && !imgUrl.includes('i.imgur.com')) {
+                                                imgUrl = imgUrl.replace('imgur.com/', 'i.imgur.com/') + '.jpg';
+                                            }
+                                            return `<img src="${imgUrl}" class="producto-img" style="display: ${i === 0 ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover;">`;
+                                        }).join('')}
                                     </div>
                                 </a>
                                 <button onclick="let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 6px 10px; cursor: pointer; border-radius: 50%; z-index: 10;">❯</button>
