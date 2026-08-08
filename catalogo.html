@@ -116,7 +116,7 @@
 
                         card.innerHTML = `
                             <div class="producto-img-container">
-                                <a href="${primeraImg}" target="_blank">
+                                <a href="#" onclick="window.open('${primeraImg}', '_blank'); return false;">
                                     <div class="carousel" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
                                         ${imagenesArray.map((img, i) => {
                                             let imgUrl = img;
