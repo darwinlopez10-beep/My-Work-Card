@@ -44,6 +44,68 @@
         .producto-footer { display: flex; flex-direction: column; gap: 10px; margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; }
         .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
         footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
+
+        /* Estilos del Visor en Pantalla Completa (Lightbox) */
+        #lightboxModal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .lightbox-cerrar {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 45px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100000;
+        }
+        .lightbox-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            z-index: 100000;
+            transition: background 0.2s;
+        }
+        .lightbox-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .lightbox-prev { left: -60px; }
+        .lightbox-next { right: -60px; }
+
+        @media(max-width: 768px) {
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -78,6 +140,16 @@
         <div class="empty-msg" id="emptyMsg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>
     </div>
 
+    <!-- Visor Lightbox Pantalla Completa -->
+    <div id="lightboxModal">
+        <span class="lightbox-cerrar" onclick="cerrarLightbox()">&times;</span>
+        <button class="lightbox-btn lightbox-prev" onclick="cambiarLightbox(-1)">❮</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="Ampliada">
+        </div>
+        <button class="lightbox-btn lightbox-next" onclick="cambiarLightbox(1)">❯</button>
+    </div>
+
     <footer>
         <p>&copy; 2026 - Todos los derechos reservados</p>
     </footer>
@@ -85,48 +157,39 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
 
-        // Función para abrir la foto activa en una pestaña limpia con fondo blanco
-        function abrirFotoLimpia(contenedor) {
-            const fotoActiva = contenedor.querySelector('img:not([style*="display: none"])');
-            if (!fotoActiva) return;
+        // Variables globales para controlar el visor en grande
+        let lightboxImgs = [];
+        let lightboxIndex = 0;
 
-            const urlFoto = fotoActiva.src;
-            const nuevaVentana = window.open('', '_blank');
+        function abrirLightbox(imagenesStr, indexActual) {
+            lightboxImgs = imagenesStr.split(',').map(img => {
+                let url = img.trim();
+                if (url.includes('imgur.com') && !url.includes('i.imgur.com')) {
+                    url = url.replace('imgur.com/', 'i.imgur.com/') + '.jpg';
+                }
+                return url;
+            });
+            lightboxIndex = indexActual;
+            actualizarLightboxImg();
+            document.getElementById('lightboxModal').style.display = 'flex';
+        }
 
-            if (nuevaVentana) {
-                nuevaVentana.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="es">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Vista Previa</title>
-                        <style>
-                            body {
-                                margin: 0;
-                                padding: 0;
-                                background-color: #ffffff;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                min-height: 100vh;
-                                cursor: pointer;
-                            }
-                            img {
-                                max-width: 95%;
-                                max-height: 95vh;
-                                object-fit: contain;
-                                border-radius: 4px;
-                            }
-                        </style>
-                    </head>
-                    <body onclick="window.close();">
-                        <img src="${urlFoto}" referrerpolicy="no-referrer" alt="Foto">
-                    </body>
-                    </html>
-                `);
-                nuevaVentana.document.close();
+        function cerrarLightbox() {
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
+
+        function cambiarLightbox(direccion) {
+            lightboxIndex += direccion;
+            if (lightboxIndex < 0) {
+                lightboxIndex = lightboxImgs.length - 1;
+            } else if (lightboxIndex >= lightboxImgs.length) {
+                lightboxIndex = 0;
             }
+            actualizarLightboxImg();
+        }
+
+        function actualizarLightboxImg() {
+            document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex];
         }
 
         function cargarProductos() {
@@ -157,7 +220,7 @@
                         let imagenesArray = p.imagen.split(',').map(img => img.trim());
 
                         card.innerHTML = `
-                            <div class="producto-img-container" onclick="abrirFotoLimpia(this)">
+                            <div class="producto-img-container" onclick="let im=this.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none'); abrirLightbox('${p.imagen}', n >= 0 ? n : 0);">
                                 <div class="carousel" style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                     ${imagenesArray.map((img, i) => {
                                         let imgUrl = img;
@@ -167,7 +230,7 @@
                                         return `<img src="${imgUrl}" class="producto-img" style="display: ${i === 0 ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover;">`;
                                     }).join('')}
                                 </div>
-                                <button type="button" onclick="event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10; font-size: 1rem;">❯</button>
+                                <button type="button" onclick="event.preventDefault(); event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10; font-size: 1rem;">❯</button>
                             </div>
                             <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
