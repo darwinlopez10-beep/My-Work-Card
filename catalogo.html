@@ -110,7 +110,7 @@
 
                         card.innerHTML = `
                             <div class="producto-img-container">
-                                <img src="${p.imagen}" class="producto-img" onclick="abrirFoto('${p.imagen}')" style="cursor:pointer; max-width:100%;">
+                                ${p.imagen.split(',').map(url => `<img src="${url.trim()}" class="producto-img" style="margin-bottom: 8px;">`).join('')}
                             </div>
                             <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
