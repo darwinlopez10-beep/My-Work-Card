@@ -110,7 +110,14 @@
 
                         card.innerHTML = `
                             <div class="producto-img-container">
-                                <a href="${p.imagen}" target="_blank"><img src="${p.imagen}" class="producto-img"></a>
+                               <div class="carousel" style="position: relative; width: 100%; overflow: hidden;">
+   ${p.imagen.split(',').map((img, index) => `<img src="${img.trim()}" class="producto-img" style="display: ${index === 0 ? 'block' : 'none'}; width: 100%;">`).join('')
+    <button onclick="this.parentElement.querySelector('img:not([style*='display: none'])').style.display='none'; 
+             this.parentElement.querySelector('img:not([style*='display: none'])').nextElementSibling ? 
+             this.parentElement.querySelector('img:not([style*='display: none'])').nextElementSibling.style.display='block' : 
+             this.parentElement.querySelector('img:first-child').style.display='block';" 
+             style="position: absolute; right: 0; top: 50%;">></button>
+</div>
                             </div>
                             <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
