@@ -45,7 +45,7 @@
         .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
         footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
 
-        /* Estilos del Visor en Pantalla Completa (Lightbox Mejorado) */
+        /* Estilos del Visor con Fondo Blanco Puro */
         #lightboxModal {
             display: none;
             position: fixed;
@@ -54,7 +54,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.95);
+            background-color: #ffffff;
             justify-content: center;
             align-items: center;
         }
@@ -76,7 +76,7 @@
             position: absolute;
             top: 20px;
             right: 30px;
-            color: #fff;
+            color: #333333;
             font-size: 50px;
             font-weight: bold;
             cursor: pointer;
@@ -86,8 +86,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(0, 0, 0, 0.1);
+            color: #333333;
             border: none;
             padding: 15px 20px;
             cursor: pointer;
@@ -97,7 +97,7 @@
             transition: background 0.2s;
         }
         .lightbox-btn:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.2);
         }
         .lightbox-prev { left: 20px; }
         .lightbox-next { right: 20px; }
@@ -135,7 +135,7 @@
         <div class="empty-msg" id="emptyMsg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>
     </div>
 
-    <!-- Visor Lightbox Pantalla Completa -->
+    <!-- Visor Lightbox Pantalla Completa Fondo Blanco -->
     <div id="lightboxModal">
         <span class="lightbox-cerrar" onclick="cerrarLightbox()">&times;</span>
         <button class="lightbox-btn lightbox-prev" onclick="cambiarLightbox(-1)">❮</button>
