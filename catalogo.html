@@ -110,11 +110,10 @@
 
                         card.innerHTML = `
                             <div class="producto-img-container">
-            <div class="carousel" style="position: relative; width: 100%; overflow: hidden;">
                 ${p.imagen.split(',').map((img, i) => `<img src="${img.trim()}" class="producto-img" style="display: ${i === 0 ? 'block' : 'none'}; width: 100%;">`).join('')}
                 <button onclick="let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 6px 10px; cursor: pointer; border-radius: 50%;">❯</button>
         </div>
-                            <div class="producto-info">
+        <div class="producto-info">
                                 <h3 class="producto-titulo">${p.titulo}</h3>
                                 <p class="producto-descripcion">${p.desc}</p>
                                 ${adminButtons}
