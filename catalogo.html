@@ -105,7 +105,7 @@
 </head>
 <body>
 
-    <div class="back-btn-container">
+    <div class="back-btn-container" id="backContainer" style="display: none;">
         <a href="index.html" class="btn-volver">&#8592; Volver a la Tarjeta</a>
     </div>
 
@@ -150,6 +150,11 @@
     </footer>
 
     <script>
+        // Mostrar el botón de volver solo si viene de la tarjeta digital
+        if (document.referrer && document.referrer.includes('index.html')) {
+            document.getElementById('backContainer').style.display = 'block';
+        }
+
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
 
         let lightboxImgs = [];
