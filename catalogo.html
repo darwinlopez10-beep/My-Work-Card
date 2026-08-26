@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>López Smart Solutions - Catálogo</title>
+    <title>López Smart Solutions - Catalog</title>
     <style>
         :root {
             --primary-color: #1b263b;
@@ -43,7 +43,7 @@
         .btn-comprar:hover { background-color: #2c3e50; }
         .btn-comprar:disabled { background-color: #cbd5e1; cursor: not-allowed; }
 
-        /* Botón flotante del Carrito */
+        /* Floating Cart Button */
         #carritoFlotante {
             position: fixed;
             bottom: 20px;
@@ -64,7 +64,7 @@
         }
         #carritoFlotante:hover { transform: scale(1.05); background-color: var(--whatsapp-hover); }
 
-        /* Modal del Carrito / Checkout */
+        /* Cart / Checkout Modal */
         #modalCarrito {
             display: none;
             position: fixed;
@@ -103,7 +103,7 @@
         .btn-zelle { background-color: var(--zelle-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-zelle:hover { background-color: var(--zelle-hover); }
 
-        /* Visor Lightbox */
+        /* Lightbox Viewer */
         #lightboxModal { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; justify-content: center; align-items: center; }
         .lightbox-content { position: relative; width: 85vw; height: 85vh; display: flex; justify-content: center; align-items: center; }
         .lightbox-content img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
@@ -122,60 +122,60 @@
     </header>
 
     <div class="catalogo-container" id="catalogoGrid">
-        <div class="empty-msg" id="emptyMsg">Cargando productos...</div>
+        <div class="empty-msg" id="emptyMsg">Loading products...</div>
     </div>
 
-    <!-- Botón Flotante del Carrito -->
+    <!-- Floating Cart Button -->
     <div id="carritoFlotante" onclick="abrirCarrito()">
-        🛒 Carrito (<span id="contadorCarrito">0</span>)
+        🛒 Cart (<span id="contadorCarrito">0</span>)
     </div>
 
-    <!-- Modal del Carrito y Pago Zelle -->
+    <!-- Cart and Zelle Payment Modal -->
     <div id="modalCarrito">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Tu Carrito de Compras</h2>
+                <h2>Your Shopping Cart</h2>
                 <span class="cerrar-modal" onclick="cerrarCarrito()">&times;</span>
             </div>
             <div id="listaCarrito">
-                <!-- Productos agregados aparecerán aquí -->
+                <!-- Added products will appear here -->
             </div>
             
             <div class="carrito-total-container">
-                <span>Total a Pagar:</span>
+                <span>Total Amount:</span>
                 <span>$<span id="totalCarrito">0.00</span></span>
             </div>
             
             <div class="checkout-form">
-                <label>Tu Nombre:</label>
-                <input type="text" id="nombreCliente" placeholder="Ej: Carlos Pérez">
+                <label>Your Name:</label>
+                <input type="text" id="nombreCliente" placeholder="E.g., John Smith">
                 
-                <label>Instrucciones de Pago (Entrega en Persona):</label>
+                <label>Payment Instructions (In-Person Pickup):</label>
                 <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0; line-height: 1.5;">
-                    💳 <b>Zelle:</b> Realiza tu pago al teléfono: <br>
+                    💳 <b>Zelle:</b> Send your payment to phone number: <br>
                     <span style="color: var(--zelle-color); font-size: 1.1rem; font-weight: bold;">954-864-8960</span><br>
-                    <small style="color: #666;">(Haz tu pago por el monto total y notifícame por WhatsApp para entregarte en persona).</small>
+                    <small style="color: #666;">(Make your payment for the total amount and notify me via WhatsApp for in-person pickup).</small>
                 </div>
 
                 <button class="btn-zelle" onclick="enviarPedidoZelle()">
-                    Pagar con Zelle y Notificar Entrega 🤝
+                    Pay with Zelle & Notify Pickup 🤝
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Visor Lightbox -->
+    <!-- Lightbox Viewer -->
     <div id="lightboxModal">
         <span class="lightbox-cerrar" onclick="cerrarLightbox()">&times;</span>
         <button class="lightbox-btn lightbox-prev" onclick="cambiarLightbox(-1)">❮</button>
         <div class="lightbox-content">
-            <img id="lightboxImg" src="" alt="Ampliada">
+            <img id="lightboxImg" src="" alt="Enlarged view">
         </div>
         <button class="lightbox-btn lightbox-next" onclick="cambiarLightbox(1)">❯</button>
     </div>
 
     <footer>
-        <p>&copy; 2026 López Smart Solutions - Todos los derechos reservados</p>
+        <p>&copy; 2026 López Smart Solutions - All rights reserved</p>
     </footer>
 
     <script>
@@ -208,16 +208,14 @@
         }
         function actualizarLightboxImg() { document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex]; }
 
-        // Función inteligente para extraer el precio y limpiar la descripción
+        // Smart function to extract price and clean description
         function procesarProducto(p) {
             let textoDesc = p.desc || "";
             let precioNum = 0;
 
-            // Busca patrón de precio al final tipo $240 o ✅ $240
             let match = textoDesc.match(/(\$|✅\s*\$)\s*([0-9]+(\.[0-9]+)?)/);
             if (match) {
                 precioNum = parseFloat(match[2]);
-                // Remueve la parte del precio de la descripción para que no se repita visualmente
                 textoDesc = textoDesc.replace(/(\$|✅\s*\$)\s*[0-9]+(\.[0-9]+)?/, '').replace(/✅/g, '').trim();
             } else if (p.precio) {
                 precioNum = parseFloat(String(p.precio).replace('$', '').trim()) || 0;
@@ -239,7 +237,6 @@
             fetch(GOOGLE_SCRIPT_URL)
                 .then(response => response.json())
                 .then(data => {
-                    // Procesamos cada producto para extraer el precio de su descripción
                     productosGlobal = data.map(p => procesarProducto(p));
                     
                     grid.innerHTML = '';
@@ -248,16 +245,16 @@
                     productosGlobal.forEach((p, index) => {
                         let stock = p.stock;
                         let badgeClass = "stock-badge";
-                        let stockTexto = `Disponibles: ${stock}`;
+                        let stockTexto = `Available: ${stock}`;
                         let btnDisabled = "";
 
                         if (stock <= 0) {
                             badgeClass += " stock-agotado";
-                            stockTexto = "Agotado";
+                            stockTexto = "Out of Stock";
                             btnDisabled = "disabled";
                         } else if (stock <= 2) {
                             badgeClass += " stock-bajo";
-                            stockTexto = `¡Últimas ${stock} unidades!`;
+                            stockTexto = `Only ${stock} left!`;
                         }
 
                         let imagenesArray = p.imagen.split(',').map(img => img.trim());
@@ -282,20 +279,20 @@
                                 <h3 class="producto-titulo">${p.titulo}</h3>
                                 <p class="producto-descripcion">${p.descripcionLimpia}</p>
                                 <div class="producto-precio-card">$${p.precio.toFixed(2)}</div>
-                                <button class="btn-comprar" onclick="agregarAlCarrito(${index})" ${btnDisabled}>Agregar al Carrito 🛒</button>
+                                <button class="btn-comprar" onclick="agregarAlCarrito(${index})" ${btnDisabled}>Add to Cart 🛒</button>
                             </div>
                         `;
                         grid.appendChild(card);
                     });
                 })
-                .catch(error => { console.error("Error al cargar:", error); });
+                .catch(error => { console.error("Error loading products:", error); });
         }
 
         function agregarAlCarrito(index) {
             let producto = productosGlobal[index];
             carrito.push(producto);
             actualizarContadorCarrito();
-            alert(`¡"${producto.titulo}" agregado al carrito!`);
+            alert(`"${producto.titulo}" added to cart!`);
         }
 
         function actualizarContadorCarrito() {
@@ -308,7 +305,7 @@
             let total = 0;
 
             if (carrito.length === 0) {
-                lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Tu carrito está vacío.</p>';
+                lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Your cart is empty.</p>';
             } else {
                 carrito.forEach((item, idx) => {
                     total += item.precio;
@@ -340,23 +337,23 @@
         function enviarPedidoZelle() {
             let nombre = document.getElementById('nombreCliente').value.trim();
             if (!nombre) {
-                alert("Por favor, ingresa tu nombre.");
+                alert("Please enter your name.");
                 return;
             }
             if (carrito.length === 0) {
-                alert("El carrito está vacío.");
+                alert("Your cart is empty.");
                 return;
             }
 
             let total = 0;
-            let mensaje = `Hola, soy *${nombre}* y ya realicé mi pago por Zelle (954-864-8960) para retirar en persona. Los artículos son:\n\n`;
+            let mensaje = `Hello, my name is *${nombre}* and I have completed my Zelle payment (954-864-8960) for in-person pickup. Here are the items:\n\n`;
             
             carrito.forEach((item, i) => {
                 total += item.precio;
                 mensaje += `${i + 1}. ${item.titulo} - *$${item.precio.toFixed(2)}*\n`;
             });
 
-            mensaje += `\n*Total Pagado:* *$${total.toFixed(2)}*\n\nAdjunto mi comprobante para coordinar la entrega en persona. ¡Gracias!`;
+            mensaje += `\n*Total Paid:* *$${total.toFixed(2)}*\n\nAttached is my payment confirmation to coordinate in-person pickup. Thank you!`;
 
             let urlWp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(urlWp, '_blank');
