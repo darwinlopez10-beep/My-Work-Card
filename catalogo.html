@@ -32,7 +32,8 @@
         
         .producto-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
         .producto-titulo { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; color: var(--primary-color); }
-        .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
+        .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 10px; flex-grow: 1; }
+        .producto-precio-card { font-size: 1.15rem; font-weight: bold; color: #27ae60; margin-bottom: 15px; }
         
         .stock-badge { display: inline-block; background: #e2e8f0; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; align-self: flex-start; }
         .stock-bajo { background: #fee2e2; color: #991b1b; }
@@ -207,19 +208,45 @@
         }
         function actualizarLightboxImg() { document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex]; }
 
+        // Función inteligente para extraer el precio y limpiar la descripción
+        function procesarProducto(p) {
+            let textoDesc = p.desc || "";
+            let precioNum = 0;
+
+            // Busca patrón de precio al final tipo $240 o ✅ $240
+            let match = textoDesc.match(/(\$|✅\s*\$)\s*([0-9]+(\.[0-9]+)?)/);
+            if (match) {
+                precioNum = parseFloat(match[2]);
+                // Remueve la parte del precio de la descripción para que no se repita visualmente
+                textoDesc = textoDesc.replace(/(\$|✅\s*\$)\s*[0-9]+(\.[0-9]+)?/, '').replace(/✅/g, '').trim();
+            } else if (p.precio) {
+                precioNum = parseFloat(String(p.precio).replace('$', '').trim()) || 0;
+            }
+
+            return {
+                titulo: p.titulo,
+                descripcionLimpia: textoDesc,
+                precio: precioNum,
+                imagen: p.imagen,
+                stock: parseInt(p.stock) || 0
+            };
+        }
+
         function cargarProductos() {
             const grid = document.getElementById('catalogoGrid');
             const emptyMsg = document.getElementById('emptyMsg');
             
             fetch(GOOGLE_SCRIPT_URL)
                 .then(response => response.json())
-                .then(productos => {
-                    productosGlobal = productos;
+                .then(data => {
+                    // Procesamos cada producto para extraer el precio de su descripción
+                    productosGlobal = data.map(p => procesarProducto(p));
+                    
                     grid.innerHTML = '';
-                    emptyMsg.style.display = (productos.length === 0) ? 'block' : 'none';
+                    emptyMsg.style.display = (productosGlobal.length === 0) ? 'block' : 'none';
 
-                    productos.forEach((p, index) => {
-                        let stock = parseInt(p.stock) || 0;
+                    productosGlobal.forEach((p, index) => {
+                        let stock = p.stock;
                         let badgeClass = "stock-badge";
                         let stockTexto = `Disponibles: ${stock}`;
                         let btnDisabled = "";
@@ -253,7 +280,8 @@
                             <div class="producto-info">
                                 <span class="${badgeClass}">${stockTexto}</span>
                                 <h3 class="producto-titulo">${p.titulo}</h3>
-                                <p class="producto-descripcion">${p.desc}</p>
+                                <p class="producto-descripcion">${p.descripcionLimpia}</p>
+                                <div class="producto-precio-card">$${p.precio.toFixed(2)}</div>
                                 <button class="btn-comprar" onclick="agregarAlCarrito(${index})" ${btnDisabled}>Agregar al Carrito 🛒</button>
                             </div>
                         `;
@@ -283,13 +311,12 @@
                 lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Tu carrito está vacío.</p>';
             } else {
                 carrito.forEach((item, idx) => {
-                    let precioNum = parseFloat(item.precio) || 0;
-                    total += precioNum;
+                    total += item.precio;
                     lista.innerHTML += `
                         <div class="item-carrito">
                             <div class="item-info">
                                 <span class="item-titulo">${item.titulo}</span>
-                                <span class="item-precio">$${precioNum.toFixed(2)}</span>
+                                <span class="item-precio">$${item.precio.toFixed(2)}</span>
                             </div>
                             <button class="btn-eliminar-item" onclick="eliminarDelCarrito(${idx})">X</button>
                         </div>
@@ -325,9 +352,8 @@
             let mensaje = `Hola, soy *${nombre}* y ya realicé mi pago por Zelle (954-864-8960) para retirar en persona. Los artículos son:\n\n`;
             
             carrito.forEach((item, i) => {
-                let precioNum = parseFloat(item.precio) || 0;
-                total += precioNum;
-                mensaje += `${i + 1}. ${item.titulo} - *$${precioNum.toFixed(2)}*\n`;
+                total += item.precio;
+                mensaje += `${i + 1}. ${item.titulo} - *$${item.precio.toFixed(2)}*\n`;
             });
 
             mensaje += `\n*Total Pagado:* *$${total.toFixed(2)}*\n\nAdjunto mi comprobante para coordinar la entrega en persona. ¡Gracias!`;
