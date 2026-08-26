@@ -46,7 +46,7 @@
         .btn-comprar:hover { background-color: #2c3e50; }
         .btn-comprar:disabled { background-color: #cbd5e1; cursor: not-allowed; }
 
-        /* Floating Cart Button - Verde original de WhatsApp, sin bordes, con texto blanco */
+        /* Floating Cart Button */
         #carritoFlotante {
             position: fixed;
             bottom: 20px;
@@ -68,9 +68,6 @@
         #carritoFlotante:hover { 
             transform: scale(1.05); 
             background-color: var(--whatsapp-hover); 
-        }
-        #carritoFlotante span {
-            color: #ffffff !important;
         }
 
         /* Cart / Checkout Modal - FIXED FOR MOBILE VIEW */
@@ -186,9 +183,9 @@
         <div class="empty-msg" id="emptyMsg">Loading products...</div>
     </div>
 
-    <!-- Floating Cart Button - Verde original y texto/carrito en blanco -->
+    <!-- Floating Cart Button -->
     <div id="carritoFlotante" onclick="abrirCarrito()">
-        🛒 <span style="color: #ffffff;">Cart</span> (<span id="contadorCarrito" style="color: #ffffff;">0</span>)
+        <span style="color: #000000; font-size: 1.2rem;">🛒</span> <span style="color: #ffffff;">Cart</span> (<span id="contadorCarrito" style="color: #ffffff;">0</span>)
     </div>
 
     <!-- Cart and Zelle Payment Modal -->
