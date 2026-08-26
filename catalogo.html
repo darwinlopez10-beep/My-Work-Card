@@ -355,8 +355,25 @@
 
             mensaje += `\n*Total Paid:* *$${total.toFixed(2)}*\n\nAttached is my payment confirmation to coordinate in-person pickup. Thank you!`;
 
-            let urlWp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-            window.open(urlWp, '_blank');
+            // Menu de compartir nativo del dispositivo (WhatsApp, Messenger, SMS, Telegram, etc.)
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Order Confirmation - López Smart Solutions',
+                    text: mensaje,
+                }).then(() => {
+                    console.log('Order shared successfully!');
+                })
+                .catch((error) => {
+                    console.log('Error sharing:', error);
+                });
+            } else {
+                // Si el dispositivo o navegador no soporta el menú de compartir nativo, copia el texto al portapapeles
+                navigator.clipboard.writeText(mensaje).then(() => {
+                    alert("Order details copied to clipboard! You can now paste and send it via Messenger, Text Message, or any app you prefer.");
+                }, () => {
+                    alert("Order summary generated. Please send a message to confirm your pickup.");
+                });
+            }
         }
 
         cargarProductos();
