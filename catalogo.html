@@ -9,6 +9,9 @@
             --primary-color: #1b263b;
             --whatsapp-color: #25d366;
             --whatsapp-hover: #1ebe5d;
+            --messenger-color: #0084ff;
+            --sms-color: #34c759;
+            --copy-color: #64748b;
             --zelle-color: #6d1ed5;
             --zelle-hover: #5615ab;
             --danger-color: #e63946;
@@ -103,6 +106,49 @@
         .btn-zelle { background-color: var(--zelle-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-zelle:hover { background-color: var(--zelle-hover); }
 
+        /* Share Options Panel Modal */
+        #modalOpcionesEnvio {
+            display: none;
+            position: fixed;
+            z-index: 100001;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center; align-items: center;
+        }
+        .share-box {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .share-box h3 { color: var(--primary-color); margin-bottom: 10px; font-size: 1.3rem; }
+        .share-box p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .share-options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .btn-share-option {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity 0.2s;
+        }
+        .btn-share-option:hover { opacity: 0.9; }
+        .opt-whatsapp { background-color: var(--whatsapp-color); }
+        .opt-messenger { background-color: var(--messenger-color); }
+        .opt-sms { background-color: var(--sms-color); }
+        .opt-copy { background-color: var(--copy-color); }
+        .btn-cerrar-share { margin-top: 15px; background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
+
         /* Lightbox Viewer */
         #lightboxModal { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; justify-content: center; align-items: center; }
         .lightbox-content { position: relative; width: 85vw; height: 85vh; display: flex; justify-content: center; align-items: center; }
@@ -157,10 +203,25 @@
                     <small style="color: #666;">(Make your payment for the total amount and notify via message to confirm in-person pickup).</small>
                 </div>
 
-                <button class="btn-zelle" onclick="enviarPedidoZelle()">
-                    Pay with Zelle & Send Confirmation Message 🤝
+                <button class="btn-zelle" onclick="mostrarOpcionesEnvio()">
+                    Pay with Zelle & Send Order 🤝
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Opciones de Envío (Estilo Tarjeta de Presentación) -->
+    <div id="modalOpcionesEnvio">
+        <div class="share-box">
+            <h3>Choose how to send your order</h3>
+            <p>Select your preferred messaging app:</p>
+            <div class="share-options-grid">
+                <button class="btn-share-option opt-whatsapp" onclick="enviarPor('whatsapp')">💬 Send via WhatsApp</button>
+                <button class="btn-share-option opt-messenger" onclick="enviarPor('messenger')">💙 Send via Messenger</button>
+                <button class="btn-share-option opt-sms" onclick="enviarPor('sms')">📱 Send via SMS / Text</button>
+                <button class="btn-share-option opt-copy" onclick="enviarPor('copy')">📋 Copy text to clipboard</button>
+            </div>
+            <button class="btn-cerrar-share" onclick="cerrarOpcionesEnvio()">Cancel</button>
         </div>
     </div>
 
@@ -182,6 +243,7 @@
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
         let productosGlobal = [];
         let carrito = [];
+        let mensajeGlobal = "";
 
         let lightboxImgs = [];
         let lightboxIndex = 0;
@@ -208,7 +270,6 @@
         }
         function actualizarLightboxImg() { document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex]; }
 
-        // Smart function to extract price and clean description
         function procesarProducto(p) {
             let textoDesc = p.desc || "";
             let precioNum = 0;
@@ -334,7 +395,7 @@
             abrirCarrito();
         }
 
-        function enviarPedidoZelle() {
+        function mostrarOpcionesEnvio() {
             let nombre = document.getElementById('nombreCliente').value.trim();
             if (!nombre) {
                 alert("Please enter your name.");
@@ -354,26 +415,33 @@
             });
 
             mensaje += `\n*Total Paid:* *$${total.toFixed(2)}*\n\nAttached is my payment confirmation to coordinate in-person pickup. Thank you!`;
+            
+            mensajeGlobal = mensaje;
+            document.getElementById('modalOpcionesEnvio').style.display = 'flex';
+        }
 
-            // Menu de compartir nativo del dispositivo (WhatsApp, Messenger, SMS, Telegram, etc.)
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Order Confirmation - López Smart Solutions',
-                    text: mensaje,
-                }).then(() => {
-                    console.log('Order shared successfully!');
-                })
-                .catch((error) => {
-                    console.log('Error sharing:', error);
-                });
-            } else {
-                // Si el dispositivo o navegador no soporta el menú de compartir nativo, copia el texto al portapapeles
-                navigator.clipboard.writeText(mensaje).then(() => {
-                    alert("Order details copied to clipboard! You can now paste and send it via Messenger, Text Message, or any app you prefer.");
-                }, () => {
-                    alert("Order summary generated. Please send a message to confirm your pickup.");
+        function cerrarOpcionesEnvio() {
+            document.getElementById('modalOpcionesEnvio').style.display = 'none';
+        }
+
+        function enviarPor(tipo) {
+            let encodedMsg = encodeURIComponent(mensajeGlobal);
+            let numeroDestino = "19548648960"; // Tu número con código de país para WhatsApp/SMS
+
+            if (tipo === 'whatsapp') {
+                window.open(`https://api.whatsapp.com/send?phone=${numeroDestino}&text=${encodedMsg}`, '_blank');
+            } else if (tipo === 'messenger') {
+                // Abre enlace general de Messenger o app
+                window.open(`https://m.me/`, '_blank');
+            } else if (tipo === 'sms') {
+                window.open(`sms:${numeroDestino}?body=${encodedMsg}`, '_blank');
+            } else if (tipo === 'copy') {
+                navigator.clipboard.writeText(mensajeGlobal).then(() => {
+                    alert("Order copied to clipboard! You can now paste it anywhere.");
                 });
             }
+            cerrarOpcionesEnvio();
+            cerrarCarrito();
         }
 
         cargarProductos();
