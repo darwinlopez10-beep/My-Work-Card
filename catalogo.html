@@ -134,24 +134,20 @@
             <div id="listaCarrito">
                 <!-- Productos agregados aparecerán aquí -->
             </div>
-            <div style="font-weight: bold; font-size: 1.2rem; text-align: right; margin: 15px 0;">
-                Total: $<span id="totalCarrito">0.00</span>
-            </div>
             
             <div class="checkout-form">
-                <h3>Datos para el envío del pedido</h3>
                 <label>Tu Nombre:</label>
                 <input type="text" id="nombreCliente" placeholder="Ej: Carlos Pérez">
                 
-                <label>Instrucciones de Pago:</label>
+                <label>Instrucciones de Pago (Entrega en Persona):</label>
                 <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0; line-height: 1.5;">
                     💳 <b>Zelle:</b> Realiza tu pago al teléfono: <br>
                     <span style="color: var(--zelle-color); font-size: 1.1rem; font-weight: bold;">954-864-8960</span><br>
-                    <small style="color: #666;">(Al hacer clic abajo, enviaremos el comprobante y tu pedido por WhatsApp).</small>
+                    <small style="color: #666;">(Haz tu pago ahora y notifícame por WhatsApp para entregarte en persona).</small>
                 </div>
 
                 <button class="btn-zelle" onclick="enviarPedidoZelle()">
-                    Enviar Pedido por WhatsApp 🚀
+                    Pagar con Zelle y Notificar Entrega 🤝
                 </button>
             </div>
         </div>
@@ -271,7 +267,6 @@
         function abrirCarrito() {
             const lista = document.getElementById('listaCarrito');
             lista.innerHTML = '';
-            let total = 0;
 
             if (carrito.length === 0) {
                 lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Tu carrito está vacío.</p>';
@@ -285,7 +280,6 @@
                     `;
                 });
             }
-            document.getElementById('totalCarrito').innerText = total.toFixed(2);
             document.getElementById('modalCarrito').style.display = 'flex';
         }
 
@@ -302,7 +296,7 @@
         function enviarPedidoZelle() {
             let nombre = document.getElementById('nombreCliente').value.trim();
             if (!nombre) {
-                alert("Por favor, ingresa tu nombre para procesar el pedido.");
+                alert("Por favor, ingresa tu nombre.");
                 return;
             }
             if (carrito.length === 0) {
@@ -310,11 +304,11 @@
                 return;
             }
 
-            let mensaje = `Hola, soy *${nombre}* y quiero hacer el siguiente pedido en *López Smart Solutions*:\n\n`;
+            let mensaje = `Hola, soy *${nombre}* y ya realicé mi pago por Zelle (954-864-8960) para retirar en persona los siguientes artículos de *López Smart Solutions*:\n\n`;
             carrito.forEach((item, i) => {
                 mensaje += `${i + 1}. ${item.titulo}\n`;
             });
-            mensaje += `\n*Método de pago:* Zelle (954-864-8960)\n¡Adjunto mi comprobante de pago para coordinar la entrega!`;
+            mensaje += `\nAdjunto mi comprobante para coordinar la entrega en persona. ¡Gracias!`;
 
             let urlWp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(urlWp, '_blank');
