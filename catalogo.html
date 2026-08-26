@@ -46,29 +46,28 @@
         .btn-comprar:hover { background-color: #2c3e50; }
         .btn-comprar:disabled { background-color: #cbd5e1; cursor: not-allowed; }
 
-        /* Floating Cart Button - Mejorado, visible y con texto blanco */
+        /* Floating Cart Button - Verde original de WhatsApp, sin bordes, con texto blanco */
         #carritoFlotante {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: #059669; /* Verde esmeralda llamativo */
-            color: #ffffff !important;
-            padding: 14px 22px;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--whatsapp-color);
+            color: #ffffff;
+            padding: 12px 20px;
             border-radius: 50px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             cursor: pointer;
             z-index: 9999;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.15rem;
-            transition: transform 0.2s, background-color 0.2s;
-            border: 2px solid #ffffff; /* Borde blanco para darle luz */
+            font-size: 1.1rem;
+            transition: transform 0.2s;
         }
         #carritoFlotante:hover { 
-            transform: scale(1.08); 
-            background-color: #047857; 
+            transform: scale(1.05); 
+            background-color: var(--whatsapp-hover); 
         }
         #carritoFlotante span {
             color: #ffffff !important;
@@ -187,7 +186,7 @@
         <div class="empty-msg" id="emptyMsg">Loading products...</div>
     </div>
 
-    <!-- Floating Cart Button con texto y diseño totalmente blanco y visible -->
+    <!-- Floating Cart Button - Verde original y texto/carrito en blanco -->
     <div id="carritoFlotante" onclick="abrirCarrito()">
         🛒 <span style="color: #ffffff;">Cart</span> (<span id="contadorCarrito" style="color: #ffffff;">0</span>)
     </div>
