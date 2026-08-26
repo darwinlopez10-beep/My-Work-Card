@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Catálogo - Marketplace</title>
+    <title>López Smart Solutions - Catálogo</title>
     <style>
         :root {
             --primary-color: #1b263b;
             --whatsapp-color: #25d366;
             --whatsapp-hover: #1ebe5d;
+            --zelle-color: #6d1ed5;
+            --zelle-hover: #5615ab;
             --danger-color: #e63946;
-            --danger-hover: #d90429;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #333333;
@@ -18,124 +19,143 @@
             --border-radius: 10px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 20px; padding-bottom: 90px; }
         header { text-align: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
         header h1 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px; }
         header p { color: var(--text-muted); font-size: 1.1rem; }
-        .back-btn-container { max-width: 1200px; margin: 0 auto 20px auto; }
-        .btn-volver { display: inline-block; background-color: var(--primary-color); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-        .btn-volver:hover { background-color: #2c3e50; }
-        #admin-panel { background: #ffffff; border: 2px dashed #00b4d8; padding: 20px; border-radius: var(--border-radius); max-width: 800px; margin: 0 auto 40px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        #admin-panel h2 { font-size: 1.3rem; color: var(--primary-color); margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; }
-        .btn-agregar { background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        .btn-agregar:hover { background-color: #2c3e50; }
+        
         .catalogo-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
         .producto-card { background: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; }
         
-        .producto-img-container { width: 100%; height: 300px; background-color: #e2e8f0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .producto-img-container { width: 100%; height: 260px; background-color: #e2e8f0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .producto-img { width: 100%; height: 100%; object-fit: cover; }
         
         .producto-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-        .producto-titulo { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
-        .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; flex-grow: 1; }
-        .producto-footer { display: flex; flex-direction: column; gap: 10px; margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; }
-        .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
-        footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
+        .producto-titulo { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; color: var(--primary-color); }
+        .producto-descripcion { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
+        
+        .stock-badge { display: inline-block; background: #e2e8f0; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; align-self: flex-start; }
+        .stock-bajo { background: #fee2e2; color: #991b1b; }
+        .stock-agotado { background: #f3f4f6; color: #9ca3af; text-decoration: line-through; }
 
-        /* Estilos del Visor con Fondo Blanco Puro */
-        #lightboxModal {
+        .btn-comprar { background-color: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; width: 100%; }
+        .btn-comprar:hover { background-color: #2c3e50; }
+        .btn-comprar:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        /* Botón flotante del Carrito */
+        #carritoFlotante {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--whatsapp-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 9999;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        #carritoFlotante:hover { transform: scale(1.05); background-color: var(--whatsapp-hover); }
+
+        /* Modal del Carrito / Checkout */
+        #modalCarrito {
             display: none;
             position: fixed;
-            z-index: 99999;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ffffff;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox-content {
-            position: relative;
-            width: 85vw;
-            height: 85vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox-content img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-        .lightbox-cerrar {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: #333333;
-            font-size: 50px;
-            font-weight: bold;
-            cursor: pointer;
             z-index: 100000;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
         }
-        .lightbox-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.1);
-            color: #333333;
-            border: none;
-            padding: 15px 20px;
-            cursor: pointer;
-            border-radius: 50%;
-            font-size: 2rem;
-            z-index: 100000;
-            transition: background 0.2s;
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 85vh;
+            overflow-y: auto;
         }
-        .lightbox-btn:hover {
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .lightbox-prev { left: 20px; }
-        .lightbox-next { right: 20px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-header h2 { color: var(--primary-color); font-size: 1.4rem; }
+        .cerrar-modal { font-size: 28px; cursor: pointer; color: #666; }
+        
+        .item-carrito { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
+        .btn-eliminar-item { background: var(--danger-color); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        
+        .checkout-form { margin-top: 20px; border-top: 2px dashed #eee; padding-top: 15px; }
+        .checkout-form label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        .checkout-form input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 15px; }
+        
+        .btn-zelle { background-color: var(--zelle-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-zelle:hover { background-color: var(--zelle-hover); }
+
+        /* Visor Lightbox */
+        #lightboxModal { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; justify-content: center; align-items: center; }
+        .lightbox-content { position: relative; width: 85vw; height: 85vh; display: flex; justify-content: center; align-items: center; }
+        .lightbox-content img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+        .lightbox-cerrar { position: absolute; top: 20px; right: 30px; color: #333333; font-size: 50px; font-weight: bold; cursor: pointer; z-index: 100000; }
+        .lightbox-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.1); color: #333333; border: none; padding: 15px 20px; cursor: pointer; border-radius: 50%; font-size: 2rem; z-index: 100000; }
+        .lightbox-prev { left: 20px; } .lightbox-next { right: 20px; }
+        .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 1.1rem; padding: 40px; }
+        footer { text-align: center; margin-top: 60px; padding: 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
 <body>
-
-    <div class="back-btn-container" id="backContainer" style="display: none;">
-        <a href="index.html" class="btn-volver">&#8592; Volver a la Tarjeta</a>
-    </div>
 
     <header>
         <h1>López Smart Solutions</h1>
         <p>Electronic devices and modern technology.</p>
     </header>
 
-    <div id="admin-panel" style="display: none;">
-        <h2>🛠️ Admin Panel (Sincronizado en la Nube)</h2>
-        <div class="form-group">
-            <label for="tituloInput">Título del Artículo</label>
-            <input type="text" id="tituloInput" placeholder="Ej: Televisor Smart TV">
-        </div>
-        <div class="form-group">
-            <label for="descInput">Descripción</label>
-            <textarea id="descInput" rows="2" placeholder="Detalles del estado, modelo, etc."></textarea>
-        </div>
-        <div class="form-group">
-            <label for="imgInput">Foto del Artículo</label>
-            <input type="file" id="imgInput" accept="image/*">
-        </div>
-        <button class="btn-agregar" onclick="agregarProducto()">+ Agregar al Catálogo</button>
-    </div>
-
     <div class="catalogo-container" id="catalogoGrid">
-        <div class="empty-msg" id="emptyMsg">No hay artículos cargados todavía. Usa el panel de arriba para agregar el primero.</div>
+        <div class="empty-msg" id="emptyMsg">Cargando productos...</div>
     </div>
 
-    <!-- Visor Lightbox Pantalla Completa Fondo Blanco -->
+    <!-- Botón Flotante del Carrito -->
+    <div id="carritoFlotante" onclick="abrirCarrito()">
+        🛒 Carrito (<span id="contadorCarrito">0</span>)
+    </div>
+
+    <!-- Modal del Carrito y Pago Zelle -->
+    <div id="modalCarrito">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tu Carrito de Compras</h2>
+                <span class="cerrar-modal" onclick="cerrarCarrito()">&times;</span>
+            </div>
+            <div id="listaCarrito">
+                <!-- Productos agregados aparecerán aquí -->
+            </div>
+            <div style="font-weight: bold; font-size: 1.2rem; text-align: right; margin: 15px 0;">
+                Total: $<span id="totalCarrito">0.00</span>
+            </div>
+            
+            <div class="checkout-form">
+                <h3>Datos para el envío del pedido</h3>
+                <label>Tu Nombre:</label>
+                <input type="text" id="nombreCliente" placeholder="Ej: Carlos Pérez">
+                
+                <label>Método de Pago:</label>
+                <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0;">
+                    💳 <b>Pago por Zelle:</b> Al hacer clic en el botón se abrirá tu WhatsApp con el resumen de tu compra para enviarnos el comprobante de pago.
+                </div>
+
+                <button class="btn-zelle" onclick="enviarPedidoZelle()">
+                     pagar con Zelle / Enviar Pedido 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visor Lightbox -->
     <div id="lightboxModal">
         <span class="lightbox-cerrar" onclick="cerrarLightbox()">&times;</span>
         <button class="lightbox-btn lightbox-prev" onclick="cambiarLightbox(-1)">❮</button>
@@ -146,16 +166,13 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 - Todos los derechos reservados</p>
+        <p>&copy; 2026 López Smart Solutions - Todos los derechos reservados</p>
     </footer>
 
     <script>
-        // Mostrar el botón de volver solo si viene de la tarjeta digital
-        if (document.referrer && document.referrer.includes('index.html')) {
-            document.getElementById('backContainer').style.display = 'block';
-        }
-
         const GOOGLE_SCRIPT_URL = "https://sheetdb.io/api/v1/rwjil7z4skdu4";
+        let productosGlobal = [];
+        let carrito = [];
 
         let lightboxImgs = [];
         let lightboxIndex = 0;
@@ -173,23 +190,14 @@
             document.getElementById('lightboxModal').style.display = 'flex';
         }
 
-        function cerrarLightbox() {
-            document.getElementById('lightboxModal').style.display = 'none';
-        }
-
-        function cambiarLightbox(direccion) {
-            lightboxIndex += direccion;
-            if (lightboxIndex < 0) {
-                lightboxIndex = lightboxImgs.length - 1;
-            } else if (lightboxIndex >= lightboxImgs.length) {
-                lightboxIndex = 0;
-            }
+        function cerrarLightbox() { document.getElementById('lightboxModal').style.display = 'none'; }
+        function cambiarLightbox(dir) {
+            lightboxIndex += dir;
+            if (lightboxIndex < 0) lightboxIndex = lightboxImgs.length - 1;
+            else if (lightboxIndex >= lightboxImgs.length) lightboxIndex = 0;
             actualizarLightboxImg();
         }
-
-        function actualizarLightboxImg() {
-            document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex];
-        }
+        function actualizarLightboxImg() { document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex]; }
 
         function cargarProductos() {
             const grid = document.getElementById('catalogoGrid');
@@ -198,26 +206,29 @@
             fetch(GOOGLE_SCRIPT_URL)
                 .then(response => response.json())
                 .then(productos => {
-                    grid.querySelectorAll('.producto-card').forEach(card => card.remove());
+                    productosGlobal = productos;
+                    grid.innerHTML = '';
                     emptyMsg.style.display = (productos.length === 0) ? 'block' : 'none';
 
-                    const params = new URLSearchParams(window.location.search);
-                    const esAdmin = params.get('admin') === 'true';
+                    productos.forEach((p, index) => {
+                        let stock = parseInt(p.stock) || 0;
+                        let badgeClass = "stock-badge";
+                        let stockTexto = `Disponibles: ${stock}`;
+                        let btnDisabled = "";
 
-                    productos.forEach((p) => {
-                        const card = document.createElement('div');
-                        card.className = 'producto-card';            
-                        let adminButtons = '';
-                        if (esAdmin) {
-                            adminButtons = `
-                                <div class="producto-footer">
-                                    <span style="font-size:0.8rem; color:#666; text-align:center;">Para eliminar o editar, hazlo directamente en tu Google Sheet.</span>
-                                </div>
-                            `;
+                        if (stock <= 0) {
+                            badgeClass += " stock-agotado";
+                            stockTexto = "Agotado";
+                            btnDisabled = "disabled";
+                        } else if (stock <= 2) {
+                            badgeClass += " stock-bajo";
+                            stockTexto = `¡Últimas ${stock} unidades!`;
                         }
 
                         let imagenesArray = p.imagen.split(',').map(img => img.trim());
 
+                        const card = document.createElement('div');
+                        card.className = 'producto-card';
                         card.innerHTML = `
                             <div class="producto-img-container" onclick="let im=this.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none'); abrirLightbox('${p.imagen}', n >= 0 ? n : 0);">
                                 <div class="carousel" style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
@@ -229,31 +240,83 @@
                                         return `<img src="${imgUrl}" class="producto-img" style="display: ${i === 0 ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover;">`;
                                     }).join('')}
                                 </div>
-                                <button type="button" onclick="event.preventDefault(); event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10; font-size: 1rem;">❯</button>
+                                <button type="button" onclick="event.preventDefault(); event.stopPropagation(); let im=this.parentElement.querySelectorAll('img'),n=Array.from(im).findIndex(x=>x.style.display!=='none');im[n].style.display='none';im[(n+1)%im.length].style.display='block';" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 50%; z-index: 10;">❯</button>
                             </div>
                             <div class="producto-info">
+                                <span class="${badgeClass}">${stockTexto}</span>
                                 <h3 class="producto-titulo">${p.titulo}</h3>
                                 <p class="producto-descripcion">${p.desc}</p>
-                                ${adminButtons}
+                                <button class="btn-comprar" onclick="agregarAlCarrito(${index})" ${btnDisabled}>Agregar al Carrito 🛒</button>
                             </div>
                         `;
                         grid.appendChild(card);
                     });
                 })
-                .catch(error => {
-                    console.error("Error al cargar desde Google Sheets:", error);
-                });
+                .catch(error => { console.error("Error al cargar:", error); });
         }
 
-        function guardarEnNube(titulo, desc, imagen) {
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ titulo, desc, imagen })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert("¡Enviado a la nube! Revisa tu Google Sheet en un momento.");
+        function agregarAlCarrito(index) {
+            let producto = productosGlobal[index];
+            carrito.push(producto);
+            actualizarContadorCarrito();
+            alert(`¡"${producto.titulo}" agregado al carrito!`);
+        }
+
+        function actualizarContadorCarrito() {
+            document.getElementById('contadorCarrito').innerText = carrito.length;
+        }
+
+        function abrirCarrito() {
+            const lista = document.getElementById('listaCarrito');
+            lista.innerHTML = '';
+            let total = 0;
+
+            if (carrito.length === 0) {
+                lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Tu carrito está vacío.</p>';
+            } else {
+                carrito.forEach((item, idx) => {
+                    lista.innerHTML += `
+                        <div class="item-carrito">
+                            <span><b>${item.titulo}</b></span>
+                            <button class="btn-eliminar-item" onclick="eliminarDelCarrito(${idx})">X</button>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('totalCarrito').innerText = total.toFixed(2);
+            document.getElementById('modalCarrito').style.display = 'flex';
+        }
+
+        function cerrarCarrito() {
+            document.getElementById('modalCarrito').style.display = 'none';
+        }
+
+        function eliminarDelCarrito(idx) {
+            carrito.splice(idx, 1);
+            actualizarContadorCarrito();
+            abrirCarrito();
+        }
+
+        function enviarPedidoZelle() {
+            let nombre = document.getElementById('nombreCliente').value.trim();
+            if (!nombre) {
+                alert("Por favor, ingresa tu nombre para procesar el pedido.");
+                return;
+            }
+            if (carrito.length === 0) {
+                alert("El carrito está vacío.");
+                return;
+            }
+
+            let mensaje = `Hola, soy *${nombre}* y quiero hacer el siguiente pedido en *López Smart Solutions*:\n\n`;
+            carrito.forEach((item, i) => {
+                mensaje += `${i + 1}. ${item.titulo}\n`;
             });
+            mensaje += `\n*Método de pago:* Zelle\n¡Quedo atento para enviar el comprobante de pago!`;
+
+            let numeroWhatsApp = "1111111111"; // Reemplaza esto con tu número de WhatsApp real si deseas (con código de país sin el +)
+            let urlWp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            window.open(urlWp, '_blank');
         }
 
         cargarProductos();
