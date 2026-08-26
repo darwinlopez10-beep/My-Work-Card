@@ -67,43 +67,52 @@
         }
         #carritoFlotante:hover { transform: scale(1.05); background-color: var(--whatsapp-hover); }
 
-        /* Cart / Checkout Modal */
+        /* Cart / Checkout Modal - FIXED FOR MOBILE VIEW */
         #modalCarrito {
             display: none;
             position: fixed;
             z-index: 100000;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
             justify-content: center; align-items: center;
+            padding: 10px;
         }
         .modal-content {
             background: white;
-            width: 90%;
+            width: 100%;
             max-width: 500px;
-            padding: 25px;
+            max-height: 92vh; /* Evita que se salga de la pantalla del celular */
+            display: flex;
+            flex-direction: column;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            max-height: 85vh;
-            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .modal-header h2 { color: var(--primary-color); font-size: 1.4rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee; background: #fff; }
+        .modal-header h2 { color: var(--primary-color); font-size: 1.3rem; }
         .cerrar-modal { font-size: 28px; cursor: pointer; color: #666; }
         
+        /* Cuerpo scrolleable del carrito para que el botón nunca quede oculto */
+        .modal-body {
+            padding: 15px 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
         .item-carrito { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f1f1; padding-bottom: 10px; }
         .item-info { display: flex; flex-direction: column; flex-grow: 1; margin-right: 15px; }
         .item-titulo { font-size: 0.95rem; font-weight: 600; color: var(--primary-color); }
         .item-precio { font-size: 0.9rem; color: #27ae60; font-weight: bold; margin-top: 3px; }
         .btn-eliminar-item { background: var(--danger-color); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
         
-        .carrito-total-container { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; border-top: 2px solid #eee; padding-top: 15px; color: var(--primary-color); }
+        .carrito-total-container { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; margin: 15px 0; border-top: 2px solid #eee; padding-top: 15px; color: var(--primary-color); }
 
-        .checkout-form { margin-top: 15px; border-top: 2px dashed #eee; padding-top: 15px; }
+        .checkout-form { margin-top: 10px; border-top: 2px dashed #eee; padding-top: 15px; }
         .checkout-form label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
         .checkout-form input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 15px; }
         
-        .btn-zelle { background-color: var(--zelle-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-zelle { background-color: var(--zelle-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px; }
         .btn-zelle:hover { background-color: var(--zelle-hover); }
 
         /* Share Options Panel Modal */
@@ -115,10 +124,11 @@
             width: 100vw; height: 100vh;
             background-color: rgba(0,0,0,0.6);
             justify-content: center; align-items: center;
+            padding: 10px;
         }
         .share-box {
             background: white;
-            width: 90%;
+            width: 100%;
             max-width: 400px;
             padding: 25px;
             border-radius: 12px;
@@ -183,34 +193,37 @@
                 <h2>Your Shopping Cart</h2>
                 <span class="cerrar-modal" onclick="cerrarCarrito()">&times;</span>
             </div>
-            <div id="listaCarrito">
-                <!-- Added products will appear here -->
-            </div>
             
-            <div class="carrito-total-container">
-                <span>Total Amount:</span>
-                <span>$<span id="totalCarrito">0.00</span></span>
-            </div>
-            
-            <div class="checkout-form">
-                <label>Your Name:</label>
-                <input type="text" id="nombreCliente" placeholder="E.g., John Smith">
-                
-                <label>Payment Instructions (In-Person Pickup):</label>
-                <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0; line-height: 1.5;">
-                    💳 <b>Zelle:</b> Send your payment to phone number: <br>
-                    <span style="color: var(--zelle-color); font-size: 1.1rem; font-weight: bold;">954-864-8960</span><br>
-                    <small style="color: #666;">(Make your payment for the total amount and notify via message to confirm in-person pickup).</small>
+            <div class="modal-body">
+                <div id="listaCarrito">
+                    <!-- Added products will appear here -->
                 </div>
+                
+                <div class="carrito-total-container">
+                    <span>Total Amount:</span>
+                    <span>$<span id="totalCarrito">0.00</span></span>
+                </div>
+                
+                <div class="checkout-form">
+                    <label>Your Name:</label>
+                    <input type="text" id="nombreCliente" placeholder="E.g., John Smith">
+                    
+                    <label>Payment Instructions (In-Person Pickup):</label>
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0; line-height: 1.5;">
+                        💳 <b>Zelle:</b> Send your payment to phone number: <br>
+                        <span style="color: var(--zelle-color); font-size: 1.1rem; font-weight: bold;">954-864-8960</span><br>
+                        <small style="color: #666;">(Make your payment for the total amount and notify via message to confirm in-person pickup).</small>
+                    </div>
 
-                <button class="btn-zelle" onclick="mostrarOpcionesEnvio()">
-                    Pay with Zelle & Send Order 🤝
-                </button>
+                    <button class="btn-zelle" onclick="mostrarOpcionesEnvio()">
+                        Pay with Zelle & Send Order 🤝
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Opciones de Envío (Estilo Tarjeta de Presentación) -->
+    <!-- Modal Opciones de Envío -->
     <div id="modalOpcionesEnvio">
         <div class="share-box">
             <h3>Choose how to send your order</h3>
@@ -424,14 +437,45 @@
             document.getElementById('modalOpcionesEnvio').style.display = 'none';
         }
 
-        function enviarPor(tipo) {
+        // Función para descontar el stock en Google Sheets automáticamente
+        async function descontarStockDeServidor() {
+            // Contamos cuántas unidades se compraron de cada producto
+            let conteoCompra = {};
+            carrito.forEach(item => {
+                conteoCompra[item.titulo] = (conteoCompra[item.titulo] || 0) + 1;
+            });
+
+            // Actualizamos cada producto afectado en SheetDB
+            for (let titulo in conteoCompra) {
+                let prodOriginal = productosGlobal.find(p => p.titulo === titulo);
+                if (prodOriginal) {
+                    let nuevoStock = Math.max(0, prodOriginal.stock - conteoCompra[titulo]);
+                    try {
+                        await fetch(`${GOOGLE_SCRIPT_URL}/titulo/${encodeURIComponent(titulo)}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ data: { stock: nuevoStock } })
+                        });
+                    } catch (e) {
+                        console.error("Error updating stock for " + titulo, e);
+                    }
+                }
+            }
+        }
+
+        async function enviarPor(tipo) {
             let encodedMsg = encodeURIComponent(mensajeGlobal);
-            let numeroDestino = "19548648960"; // Tu número con código de país para WhatsApp/SMS
+            let numeroDestino = "19548648960"; 
+
+            // Descontamos el stock de la base de datos automáticamente al enviar el pedido
+            await descontarStockDeServidor();
 
             if (tipo === 'whatsapp') {
                 window.open(`https://api.whatsapp.com/send?phone=${numeroDestino}&text=${encodedMsg}`, '_blank');
             } else if (tipo === 'messenger') {
-                // Abre enlace general de Messenger o app
                 window.open(`https://m.me/`, '_blank');
             } else if (tipo === 'sms') {
                 window.open(`sms:${numeroDestino}?body=${encodedMsg}`, '_blank');
@@ -440,8 +484,13 @@
                     alert("Order copied to clipboard! You can now paste it anywhere.");
                 });
             }
+
+            // Vaciamos el carrito y recargamos el catálogo con el stock actualizado
+            carrito = [];
+            actualizarContadorCarrito();
             cerrarOpcionesEnvio();
             cerrarCarrito();
+            cargarProductos();
         }
 
         cargarProductos();
