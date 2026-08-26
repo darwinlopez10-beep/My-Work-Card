@@ -87,10 +87,15 @@
         .modal-header h2 { color: var(--primary-color); font-size: 1.4rem; }
         .cerrar-modal { font-size: 28px; cursor: pointer; color: #666; }
         
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
-        .btn-eliminar-item { background: var(--danger-color); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .item-carrito { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f1f1; padding-bottom: 10px; }
+        .item-info { display: flex; flex-direction: column; flex-grow: 1; margin-right: 15px; }
+        .item-titulo { font-size: 0.95rem; font-weight: 600; color: var(--primary-color); }
+        .item-precio { font-size: 0.9rem; color: #27ae60; font-weight: bold; margin-top: 3px; }
+        .btn-eliminar-item { background: var(--danger-color); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
         
-        .checkout-form { margin-top: 20px; border-top: 2px dashed #eee; padding-top: 15px; }
+        .carrito-total-container { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; border-top: 2px solid #eee; padding-top: 15px; color: var(--primary-color); }
+
+        .checkout-form { margin-top: 15px; border-top: 2px dashed #eee; padding-top: 15px; }
         .checkout-form label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
         .checkout-form input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 15px; }
         
@@ -135,6 +140,11 @@
                 <!-- Productos agregados aparecerán aquí -->
             </div>
             
+            <div class="carrito-total-container">
+                <span>Total a Pagar:</span>
+                <span>$<span id="totalCarrito">0.00</span></span>
+            </div>
+            
             <div class="checkout-form">
                 <label>Tu Nombre:</label>
                 <input type="text" id="nombreCliente" placeholder="Ej: Carlos Pérez">
@@ -143,7 +153,7 @@
                 <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #e2e8f0; line-height: 1.5;">
                     💳 <b>Zelle:</b> Realiza tu pago al teléfono: <br>
                     <span style="color: var(--zelle-color); font-size: 1.1rem; font-weight: bold;">954-864-8960</span><br>
-                    <small style="color: #666;">(Haz tu pago ahora y notifícame por WhatsApp para entregarte en persona).</small>
+                    <small style="color: #666;">(Haz tu pago por el monto total y notifícame por WhatsApp para entregarte en persona).</small>
                 </div>
 
                 <button class="btn-zelle" onclick="enviarPedidoZelle()">
@@ -267,19 +277,26 @@
         function abrirCarrito() {
             const lista = document.getElementById('listaCarrito');
             lista.innerHTML = '';
+            let total = 0;
 
             if (carrito.length === 0) {
                 lista.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">Tu carrito está vacío.</p>';
             } else {
                 carrito.forEach((item, idx) => {
+                    let precioNum = parseFloat(item.precio) || 0;
+                    total += precioNum;
                     lista.innerHTML += `
                         <div class="item-carrito">
-                            <span><b>${item.titulo}</b></span>
+                            <div class="item-info">
+                                <span class="item-titulo">${item.titulo}</span>
+                                <span class="item-precio">$${precioNum.toFixed(2)}</span>
+                            </div>
                             <button class="btn-eliminar-item" onclick="eliminarDelCarrito(${idx})">X</button>
                         </div>
                     `;
                 });
             }
+            document.getElementById('totalCarrito').innerText = total.toFixed(2);
             document.getElementById('modalCarrito').style.display = 'flex';
         }
 
@@ -304,11 +321,16 @@
                 return;
             }
 
-            let mensaje = `Hola, soy *${nombre}* y ya realicé mi pago por Zelle (954-864-8960) para retirar en persona los siguientes artículos de *López Smart Solutions*:\n\n`;
+            let total = 0;
+            let mensaje = `Hola, soy *${nombre}* y ya realicé mi pago por Zelle (954-864-8960) para retirar en persona. Los artículos son:\n\n`;
+            
             carrito.forEach((item, i) => {
-                mensaje += `${i + 1}. ${item.titulo}\n`;
+                let precioNum = parseFloat(item.precio) || 0;
+                total += precioNum;
+                mensaje += `${i + 1}. ${item.titulo} - *$${precioNum.toFixed(2)}*\n`;
             });
-            mensaje += `\nAdjunto mi comprobante para coordinar la entrega en persona. ¡Gracias!`;
+
+            mensaje += `\n*Total Pagado:* *$${total.toFixed(2)}*\n\nAdjunto mi comprobante para coordinar la entrega en persona. ¡Gracias!`;
 
             let urlWp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(urlWp, '_blank');
