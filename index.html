@@ -50,17 +50,25 @@
         .card-content {
             padding-top: 80px;
         }
-        /* AQUÍ ESTÁ EL CAMBIO DEL LOGO MÁS GRANDE (350px) */
+        
+        /* LOGO MODIFICADO PARA QUE SE VEA MÁS GRANDE */
         .company-logo-container {
             width: 100%;
-            max-width: 350px;
-            margin: 0 auto 15px;
+            max-width: 100%;
+            margin: 15px auto 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .company-logo-container img {
             width: 100%;
+            max-width: 320px;
             height: auto;
             display: block;
+            transform: scale(1.3); /* Escala el logo un 30% más grande */
+            transform-origin: center;
         }
+
         h1 {
             font-size: 20px;
             color: #111;
