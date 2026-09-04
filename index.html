@@ -50,7 +50,7 @@
         .card-content {
             padding-top: 80px;
         }
-        /* Logo grande y elegante */
+        /* Logo grande */
         .company-logo-container {
             width: 100%;
             max-width: 240px;
@@ -67,7 +67,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        /* Descripción con negrita y excelente presencia */
+        /* Descripción en negrita */
         p.subtitle {
             font-size: 13.5px;
             color: #222;
@@ -76,41 +76,55 @@
             padding: 0 10px;
             font-weight: 600;
         }
-        /* Botones estilo pastilla (pill-shaped) centrados con iconos */
+        
+        /* Estilo de botones con el círculo redondito a la izquierda */
         .btn {
             display: flex;
             align-items: center;
-            justify-content: center;
             width: 100%;
-            padding: 13px 20px;
+            padding: 10px 15px 10px 10px;
             margin-bottom: 12px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 15px;
-            transition: opacity 0.2s, transform 0.1s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            gap: 10px;
+            font-size: 14.5px;
+            background-color: #ffffff;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #eaeaea;
+            transition: transform 0.1s, box-shadow 0.2s;
+            position: relative;
         }
         .btn:active {
-            opacity: 0.8;
             transform: scale(0.98);
         }
-        .btn-primary {
-            background-color: #0056b3;
+        
+        /* Círculo redondito para el icono */
+        .icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 15px;
+            flex-shrink: 0;
             color: #fff;
         }
-        .btn-whatsapp {
-            background-color: #25d366;
-            color: #fff;
-        }
-        .btn-secondary {
-            background-color: #e9ecef;
+
+        /* Colores específicos para los círculos de cada botón */
+        .btn-primary .icon-circle { background-color: #0056b3; }
+        .btn-whatsapp .icon-circle { background-color: #25d366; }
+        .btn-email .icon-circle { background-color: #495057; }
+        .btn-contact .icon-circle { background-color: #20c997; }
+        .btn-catalog .icon-circle { background-color: #e83e8c; }
+        .btn-review .icon-circle { background-color: #fbbc05; color: #000; }
+
+        .btn-text {
+            text-align: left;
+            flex-grow: 1;
             color: #333;
-        }
-        .btn-review {
-            background-color: #fbbc05;
-            color: #000;
         }
 
         .qr-container {
@@ -156,15 +170,43 @@
             <h1>López Equipment Services LLC</h1>
             <p class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
-            <a href="tel:954-864-8960" class="btn btn-primary">📞 Call: 954-864-8960</a>
-            <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn btn-whatsapp" target="_blank">💬 Send WhatsApp</a>
-            <a href="mailto:Lopezeqp@gmail.com" class="btn btn-secondary">📧 Send Email: Lopezeqp@gmail.com</a>
-            <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn btn-secondary">💾 Save Contact</a>
-            
-            <!-- BOTÓN DE GOOGLE REVIEW -->
-            <a href="https://maps.app.goo.gl/DtLDQmYrEGVH2DB56?g_st=ac" class="btn btn-review" target="_blank">⭐ Leave a Google Review</a>
+            <!-- Botón Teléfono -->
+            <a href="tel:954-864-8960" class="btn btn-primary">
+                <div class="icon-circle">📞</div>
+                <div class="btn-text">Call: 954-864-8960</div>
+            </a>
 
-            <!-- CÓDIGO QR AUTOMÁTICO -->
+            <!-- Botón WhatsApp -->
+            <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn btn-whatsapp" target="_blank">
+                <div class="icon-circle">💬</div>
+                <div class="btn-text">Send WhatsApp</div>
+            </a>
+
+            <!-- Botón Email -->
+            <a href="mailto:Lopezeqp@gmail.com" class="btn btn-email">
+                <div class="icon-circle">📧</div>
+                <div class="btn-text">Send Email: Lopezeqp@gmail.com</div>
+            </a>
+
+            <!-- Botón Guardar Contacto (vCard) -->
+            <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn btn-contact">
+                <div class="icon-circle">💾</div>
+                <div class="btn-text">Save Contact</div>
+            </a>
+
+            <!-- Botón del Catálogo (Recuperado) -->
+            <a href="catalogo.pdf" class="btn btn-catalog" target="_blank">
+                <div class="icon-circle">📋</div>
+                <div class="btn-text">View Services Catalog</div>
+            </a>
+
+            <!-- Botón Reseña de Google -->
+            <a href="https://maps.app.goo.gl/DtLDQmYrEGVH2DB56?g_st=ac" class="btn btn-review" target="_blank">
+                <div class="icon-circle">⭐</div>
+                <div class="btn-text">Leave a Google Review</div>
+            </a>
+
+            <!-- Código QR Automático -->
             <div class="qr-container">
                 <p>Scan to share my digital card:</p>
                 <div id="qrcode"></div>
@@ -177,7 +219,7 @@
     </div>
 
     <script>
-        // Genera el código QR automáticamente con la URL actual
+        // Genera el código QR automáticamente usando la URL actual
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
             width: 130,
