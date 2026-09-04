@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>López Equipment Services LLC</title>
-    <!-- Librería gratuita para generar códigos QR automáticos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
@@ -50,16 +49,16 @@
         .card-content {
             padding-top: 10px;
         }
-        /* Logo grande sin márgenes laterales, abarcando y más grande que la foto */
+        /* Logo grande */
         .company-logo-container {
             width: 100%;
-            max-width: 100%; /* Elimina restricciones y abarca todo el ancho */
+            max-width: 100%;
             margin: 0 0 15px 0;
             padding: 0;
         }
         .company-logo-container img {
             width: 100%;
-            max-width: 360px; /* Tamaño generoso, notablemente más grande que la foto de perfil */
+            max-width: 360px;
             height: auto;
             display: block;
             margin: 0 auto;
@@ -70,9 +69,9 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        /* Descripción en negrita */
+        /* Descripción con letra un poco más grande y clara */
         p.subtitle {
-            font-size: 13.5px;
+            font-size: 15px;
             color: #222;
             margin-bottom: 22px;
             line-height: 1.5;
@@ -123,7 +122,7 @@
             color: #333;
         }
 
-        /* Botón de compartir con el mismo verde clarito */
+        /* Botón de compartir */
         .btn-share {
             display: flex;
             align-items: center;
@@ -175,12 +174,10 @@
 <body>
 
     <div class="card">
-        <!-- Logo colocado arriba, sin márgenes y más grande que la foto -->
         <div class="company-logo-container">
             <img src="logo.png" alt="López Equipment Services LLC Logotipo">
         </div>
 
-        <!-- Foto de perfil debajo del logo -->
         <div class="profile-photo-container">
             <img src="mi-foto.jpg" alt="Darwin López">
         </div>
@@ -189,48 +186,40 @@
             <h1>López Equipment Services LLC</h1>
             <p class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
-            <!-- Botón Teléfono -->
             <a href="tel:954-864-8960" class="btn">
                 <div class="icon-circle">📞</div>
                 <div class="btn-text">Call: 954-864-8960</div>
             </a>
 
-            <!-- Botón WhatsApp -->
             <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn" target="_blank">
                 <div class="icon-circle">💬</div>
                 <div class="btn-text">Send WhatsApp</div>
             </a>
 
-            <!-- Botón Email -->
             <a href="mailto:Lopezeqp@gmail.com" class="btn">
                 <div class="icon-circle">📧</div>
                 <div class="btn-text">Send Email: Lopezeqp@gmail.com</div>
             </a>
 
-            <!-- Botón Guardar Contacto (vCard) -->
             <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn">
                 <div class="icon-circle">💾</div>
                 <div class="btn-text">Save Contact</div>
             </a>
 
-            <!-- Botón del Catálogo -->
             <a href="catalogo.html" class="btn">
                 <div class="icon-circle">📋</div>
                 <div class="btn-text">View Services Catalog</div>
             </a>
 
-            <!-- Botón Reseña de Google -->
             <a href="https://maps.app.goo.gl/DtLDQmYrEGVH2DB56?g_st=ac" class="btn" target="_blank">
                 <div class="icon-circle">⭐</div>
                 <div class="btn-text">Leave a Google Review</div>
             </a>
 
-            <!-- Botón Share (Compartir Tarjeta) -->
             <a href="#" class="btn-share" onclick="if(navigator.share){navigator.share({title: document.title, url: window.location.href}).catch(()=>{});}else{alert('Link copied to clipboard!');} return false;">
                 <span>✈️</span> Share
             </a>
 
-            <!-- Código QR Automático -->
             <div class="qr-container">
                 <p>Scan to share my digital card:</p>
                 <div id="qrcode"></div>
