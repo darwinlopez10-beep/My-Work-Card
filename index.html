@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>López Equipment Services LLC</title>
-    <!-- Librería gratuita para generar códigos QR automáticos -->
+    <!-- Librería para generar el código QR automático -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
@@ -47,15 +47,9 @@
             height: 100%;
             object-fit: cover;
         }
-        .card-content {
-            padding-top: 10px;
-        }
-        /* Logo grande */
         .company-logo-container {
             width: 100%;
-            max-width: 100%;
             margin: 0 0 15px 0;
-            padding: 0;
         }
         .company-logo-container img {
             width: 100%;
@@ -70,7 +64,6 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        /* Descripción con letra un poco más grande y clara */
         p.subtitle {
             font-size: 15px;
             color: #222;
@@ -79,8 +72,6 @@
             padding: 0 10px;
             font-weight: 600;
         }
-        
-        /* Estilo de botones con fondo blanco y esferas */
         .btn {
             display: flex;
             align-items: center;
@@ -96,13 +87,10 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             border: 1px solid #eaeaea;
             transition: transform 0.1s, box-shadow 0.2s;
-            position: relative;
         }
         .btn:active {
             transform: scale(0.98);
         }
-        
-        /* Esferas con el tono verde clarito exacto */
         .icon-circle {
             width: 42px;
             height: 42px;
@@ -116,14 +104,11 @@
             background-color: #25d366;
             color: #fff;
         }
-
         .btn-text {
             text-align: left;
             flex-grow: 1;
             color: #333;
         }
-
-        /* Botón de compartir */
         .btn-share {
             display: flex;
             align-items: center;
@@ -140,10 +125,6 @@
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
             gap: 8px;
         }
-        .btn-share:active {
-            transform: scale(0.98);
-        }
-
         .qr-container {
             margin-top: 20px;
             padding-top: 15px;
@@ -162,7 +143,6 @@
             margin: 0 auto;
             border-radius: 8px;
         }
-
         .contact-details {
             margin-top: 15px;
             padding-top: 12px;
@@ -170,67 +150,122 @@
             font-size: 12px;
             color: #999;
         }
+        /* Botón de Ajustes Oculto al final */
+        .admin-footer {
+            margin-top: 25px;
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            text-align: center;
+        }
+        .btn-settings-trigger {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        #admin-panel {
+            display: none;
+            margin-top: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        #admin-panel h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #856404;
+        }
+        #admin-panel label {
+            font-size: 12px;
+            font-weight: bold;
+            display: block;
+            margin-top: 8px;
+            color: #555;
+        }
+        #admin-panel input, #admin-panel textarea {
+            width: 100%;
+            padding: 7px;
+            margin-top: 3px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12.5px;
+        }
+        .admin-btns {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+        }
+        .admin-btns button {
+            flex: 1;
+            padding: 7px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-save-cfg { background-color: #28a745; color: white; }
+        .btn-cancel-cfg { background-color: #6c757d; color: white; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <!-- Logo colocado arriba, sin márgenes y más grande que la foto -->
+        <!-- Logo -->
         <div class="company-logo-container">
-            <img src="logo.png" alt="López Equipment Services LLC Logotipo">
+            <img id="view-logo" src="logo.png" alt="López Equipment Services LLC Logotipo">
         </div>
 
-        <!-- Foto de perfil debajo del logo -->
+        <!-- Foto de perfil -->
         <div class="profile-photo-container">
-            <img src="mi-foto.jpg" alt="Darwin López">
+            <img id="view-photo" src="mi-foto.jpg" alt="Darwin López">
         </div>
 
         <div class="card-content">
-            <h1>López Equipment Services LLC</h1>
-            <p class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
+            <h1 id="view-title">López Equipment Services LLC</h1>
+            <p id="view-subtitle" class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
-            <!-- Botón Teléfono -->
+            <!-- Botones de Contacto -->
             <a href="tel:954-864-8960" class="btn">
                 <div class="icon-circle">📞</div>
                 <div class="btn-text">Call: 954-864-8960</div>
             </a>
 
-            <!-- Botón WhatsApp -->
             <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn" target="_blank">
                 <div class="icon-circle">💬</div>
                 <div class="btn-text">Send WhatsApp</div>
             </a>
 
-            <!-- Botón Email -->
             <a href="mailto:Lopezeqp@gmail.com" class="btn">
                 <div class="icon-circle">📧</div>
                 <div class="btn-text">Send Email: Lopezeqp@gmail.com</div>
             </a>
 
-            <!-- Botón Guardar Contacto (vCard) -->
             <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn">
                 <div class="icon-circle">💾</div>
                 <div class="btn-text">Save Contact</div>
             </a>
 
-            <!-- Botón del Catálogo -->
             <a href="catalogo.html" class="btn">
                 <div class="icon-circle">📋</div>
                 <div class="btn-text">View Services Catalog</div>
             </a>
 
-            <!-- Botón Reseña de Google Actualizado -->
             <a href="https://g.page/r/CcHY5NVRAQGzECE/review" class="btn" target="_blank">
                 <div class="icon-circle">⭐</div>
                 <div class="btn-text">Leave a Google Review</div>
             </a>
 
-            <!-- Botón Share (Compartir Tarjeta) -->
+            <!-- Botón Share -->
             <a href="#" class="btn-share" onclick="if(navigator.share){navigator.share({title: document.title, url: window.location.href}).catch(()=>{});}else{alert('Link copied to clipboard!');} return false;">
                 <span>✈️</span> Share
             </a>
 
-            <!-- Código QR Automático -->
+            <!-- Código QR -->
             <div class="qr-container">
                 <p>Scan to share my digital card:</p>
                 <div id="qrcode"></div>
@@ -239,11 +274,39 @@
             <div class="contact-details">
                 <p>Florida, USA</p>
             </div>
+
+            <!-- Ajustes / Admin discreto abajo -->
+            <div class="admin-footer">
+                <button class="btn-settings-trigger" onclick="openAdminPanel()">⚙️ Configuración</button>
+                
+                <div id="admin-panel">
+                    <h3>Panel de Ajustes (Admin)</h3>
+                    <label>Contraseña:</label>
+                    <input type="password" id="admin-pass" placeholder="Clave (por defecto: 1234)">
+                    <button onclick="verifyPassword()" style="margin-top:5px; width:100%; padding:5px; background:#007bff; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px;">Entrar</button>
+
+                    <div id="edit-form-content" style="display:none; margin-top:8px;">
+                        <label>Título:</label>
+                        <input type="text" id="cfg-title" value="López Equipment Services LLC">
+
+                        <label>Descripción:</label>
+                        <textarea id="cfg-subtitle" rows="2">I provide repair and maintenance services for restaurant and supermarket equipment...</textarea>
+
+                        <label>Nueva Contraseña (Opcional):</label>
+                        <input type="password" id="cfg-new-pass" placeholder="Nueva clave">
+
+                        <div class="admin-btns">
+                            <button class="btn-save-cfg" onclick="saveChanges()">Guardar</button>
+                            <button class="btn-cancel-cfg" onclick="closeAdminPanel()">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // Genera el código QR automáticamente usando la URL actual
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
             width: 130,
@@ -252,6 +315,51 @@
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
+
+        let adminPassword = localStorage.getItem('card_pass') || '1234';
+
+        window.onload = function() {
+            if(localStorage.getItem('card_title')) {
+                document.getElementById('view-title').innerText = localStorage.getItem('card_title');
+                document.getElementById('cfg-title').value = localStorage.getItem('card_title');
+            }
+            if(localStorage.getItem('card_subtitle')) {
+                document.getElementById('view-subtitle').innerText = localStorage.getItem('card_subtitle');
+                document.getElementById('cfg-subtitle').value = localStorage.getItem('card_subtitle');
+            }
+        }
+
+        function openAdminPanel() {
+            let panel = document.getElementById('admin-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function verifyPassword() {
+            let entered = document.getElementById('admin-pass').value;
+            if(entered === adminPassword) {
+                document.getElementById('edit-form-content').style.display = 'block';
+                alert('¡Acceso concedido!');
+            } else {
+                alert('Contraseña incorrecta.');
+            }
+        }
+
+        function saveChanges() {
+            localStorage.setItem('card_title', document.getElementById('cfg-title').value);
+            localStorage.setItem('card_subtitle', document.getElementById('cfg-subtitle').value);
+            
+            let newPass = document.getElementById('cfg-new-pass').value;
+            if(newPass.trim() !== "") {
+                localStorage.setItem('card_pass', newPass);
+                alert('¡Contraseña actualizada!');
+            }
+            alert('¡Cambios guardados!');
+            location.reload();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').style.display = 'none';
+        }
     </script>
 
 </body>
