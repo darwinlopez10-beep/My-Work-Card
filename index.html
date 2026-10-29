@@ -257,7 +257,7 @@
     <script>
         // Generar QR limpio sin parámetros
         const cleanUrl = window.location.href.split('?')[0];
-        document.getElementById("qrcode").innerHTML = ""; // Limpiar QR previo por seguridad
+        document.getElementById("qrcode").innerHTML = ""; 
         new QRCode(document.getElementById("qrcode"), {
             text: cleanUrl,
             width: 130,
@@ -268,24 +268,27 @@
         });
 
         window.onload = function() {
-            // Validar clave de administrador en la URL (ejemplo: ?admin=mi_clave_secreta_954)
+            // Validar clave de administrador en la URL
             const urlParams = new URLSearchParams(window.location.search);
             const adminKey = urlParams.get('admin');
             
-            // CONTRASEÑA DE ADMINISTRADOR OCULTA
+            // TU CONTRASEÑA SECRETA DE ADMINISTRADOR
             const secretAdminPassword = "mi_clave_secreta_954";
 
+            // Si la clave en la URL coincide, se muestra el panel de edición
             if (adminKey === secretAdminPassword) {
                 document.getElementById('admin-container').style.display = 'block';
             }
 
-            // Cargar datos guardados si existen en la memoria local
+            // Cargar datos guardados si existen
             const savedTitle = localStorage.getItem('card_title');
             const savedSubtitle = localStorage.getItem('card_subtitle');
 
             if(savedTitle) {
                 document.getElementById('view-title').innerText = savedTitle;
                 document.getElementById('cfg-title').value = savedTitle;
+            } else {
+                document.getElementById('cfg-title').value = document.getElementById('view-title').innerText;
             }
 
             if(savedSubtitle) {
