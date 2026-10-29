@@ -143,9 +143,11 @@
             border-top: 1px solid #eee;
             font-size: 12px;
             color: #999;
+            cursor: pointer; /* Indica que se puede interactuar */
+            user-select: none;
         }
         .admin-footer {
-            display: none; /* Oculto por defecto para los clientes */
+            display: none; /* Oculto por defecto */
             margin-top: 25px;
             border-top: 1px dashed #ddd;
             padding-top: 15px;
@@ -179,7 +181,7 @@
 <body>
 
     <div class="card">
-        <!-- LOGOTIPO REAL DE LA EMPRESA -->
+        <!-- LOGOTIPO REAL -->
         <div class="company-logo-container">
             <img id="view-logo" src="logo.png" alt="López Equipment Services LLC">
         </div>
@@ -194,19 +196,19 @@
             <p id="view-subtitle" class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
 
             <!-- Botones de Contacto -->
-            <a href="tel:954-864-8960" class="btn">
+            <a href="tel:954-864-8960" id="btn-call" class="btn">
                 <div class="icon-circle">📞</div>
-                <div class="btn-text">Call: 954-864-8960</div>
+                <div class="btn-text" id="text-call">Call: 954-864-8960</div>
             </a>
 
-            <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn" target="_blank">
+            <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." id="btn-wa" class="btn" target="_blank">
                 <div class="icon-circle">💬</div>
                 <div class="btn-text">Send WhatsApp</div>
             </a>
 
-            <a href="mailto:Lopezeqp@gmail.com" class="btn">
+            <a href="mailto:Lopezeqp@gmail.com" id="btn-mail" class="btn">
                 <div class="icon-circle">📧</div>
-                <div class="btn-text">Send Email: Lopezeqp@gmail.com</div>
+                <div class="btn-text" id="text-mail">Send Email: Lopezeqp@gmail.com</div>
             </a>
 
             <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn">
@@ -235,19 +237,42 @@
                 <div id="qrcode"></div>
             </div>
 
-            <div class="contact-details">
-                <p>Florida, USA</p>
+            <!-- ZONA SECRETA: Haz doble toque aquí para abrir el panel de admin -->
+            <div class="contact-details" id="secret-trigger" ondblclick="triggerAdmin()" onclick="handleMobileClick()">
+                <p>Florida, USA (Toca dos veces aquí para configurar)</p>
             </div>
 
-            <!-- Panel de Administración Oculto por Seguridad -->
+            <!-- Panel de Administración Completo -->
             <div class="admin-footer" id="admin-container">
                 <div id="admin-panel">
-                    <h3 style="font-size:14px; color:#856404; margin-bottom:5px;">Panel de Edición Interna</h3>
-                    <label>Título:</label>
+                    <h3 style="font-size:14px; color:#856404; margin-bottom:5px;">⚙️ Panel de Configuración General</h3>
+                    
+                    <label>Título de la Empresa:</label>
                     <input type="text" id="cfg-title" value="López Equipment Services LLC">
-                    <label>Descripción:</label>
+                    
+                    <label>Descripción / Subtítulo:</label>
                     <textarea id="cfg-subtitle" rows="2"></textarea>
-                    <button onclick="saveChanges()" style="margin-top:8px; width:100%; padding:6px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">Guardar Cambios</button>
+                    
+                    <label>Teléfono (Ej: 954-864-8960):</label>
+                    <input type="text" id="cfg-phone" value="954-864-8960">
+
+                    <label>WhatsApp (Número con código de país, ej: 19548648960):</label>
+                    <input type="text" id="cfg-wa" value="19548648960">
+
+                    <label>Correo Electrónico:</label>
+                    <input type="text" id="cfg-email" value="Lopezeqp@gmail.com">
+
+                    <label>URL de la Foto de Perfil (nombre de archivo o enlace):</label>
+                    <input type="text" id="cfg-photo" value="mi-foto.jpg">
+
+                    <label>URL del Logo (nombre de archivo o enlace):</label>
+                    <input type="text" id="cfg-logo" value="logo.png">
+
+                    <label>Nueva Contraseña de Administrador:</label>
+                    <input type="text" id="cfg-password" value="1234">
+
+                    <button onclick="saveChanges()" style="margin-top:12px; width:100%; padding:8px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px;">Guardar Todos los Cambios</button>
+                    <button onclick="hideAdmin()" style="margin-top:6px; width:100%; padding:6px; background:#6c757d; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:12px;">Cerrar Panel</button>
                 </div>
             </div>
 
@@ -255,7 +280,7 @@
     </div>
 
     <script>
-        // Generar QR limpio sin parámetros
+        // Generar QR limpio
         const cleanUrl = window.location.href.split('?')[0];
         document.getElementById("qrcode").innerHTML = ""; 
         new QRCode(document.getElementById("qrcode"), {
@@ -267,41 +292,96 @@
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        window.onload = function() {
-            // Validar clave de administrador en la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const adminKey = urlParams.get('admin');
-            
-            // TU CONTRASEÑA SECRETA DE ADMINISTRADOR
-            const secretAdminPassword = "mi_clave_secreta_954";
-
-            // Si la clave en la URL coincide, se muestra el panel de edición
-            if (adminKey === secretAdminPassword) {
-                document.getElementById('admin-container').style.display = 'block';
+        // Soporte de doble toque rápido en celulares
+        let lastTap = 0;
+        function handleMobileClick() {
+            let currentTime = new Date().getTime();
+            let tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+                triggerAdmin();
+                event.preventDefault();
             }
+            lastTap = currentTime;
+        }
 
-            // Cargar datos guardados si existen
-            const savedTitle = localStorage.getItem('card_title');
-            const savedSubtitle = localStorage.getItem('card_subtitle');
+        function triggerAdmin() {
+            let savedPass = localStorage.getItem('admin_pass') || '1234';
+            let pass = prompt("Introduce la contraseña de administrador:");
+            if(pass === savedPass) {
+                document.getElementById('admin-container').style.display = 'block';
+                alert("¡Acceso concedido! Ya puedes editar los datos abajo.");
+            } else if(pass !== null) {
+                alert("Contraseña incorrecta.");
+            }
+        }
 
-            if(savedTitle) {
-                document.getElementById('view-title').innerText = savedTitle;
-                document.getElementById('cfg-title').value = savedTitle;
+        function hideAdmin() {
+            document.getElementById('admin-container').style.display = 'none';
+        }
+
+        window.onload = function() {
+            // Cargar datos personalizados si existen
+            if(localStorage.getItem('card_title')) {
+                document.getElementById('view-title').innerText = localStorage.getItem('card_title');
+                document.getElementById('cfg-title').value = localStorage.getItem('card_title');
             } else {
                 document.getElementById('cfg-title').value = document.getElementById('view-title').innerText;
             }
 
-            if(savedSubtitle) {
-                document.getElementById('view-subtitle').innerText = savedSubtitle;
-                document.getElementById('cfg-subtitle').value = savedSubtitle;
+            if(localStorage.getItem('card_subtitle')) {
+                document.getElementById('view-subtitle').innerText = localStorage.getItem('card_subtitle');
+                document.getElementById('cfg-subtitle').value = localStorage.getItem('card_subtitle');
             } else {
                 document.getElementById('cfg-subtitle').value = document.getElementById('view-subtitle').innerText;
+            }
+
+            if(localStorage.getItem('card_phone')) {
+                let p = localStorage.getItem('card_phone');
+                document.getElementById('btn-call').href = "tel:" + p;
+                document.getElementById('text-call').innerText = "Call: " + p;
+                document.getElementById('cfg-phone').value = p;
+            }
+
+            if(localStorage.getItem('card_wa')) {
+                let wa = localStorage.getItem('card_wa');
+                document.getElementById('btn-wa').href = "https://wa.me/" + wa + "?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services.";
+                document.getElementById('cfg-wa').value = wa;
+            }
+
+            if(localStorage.getItem('card_email')) {
+                let em = localStorage.getItem('card_email');
+                document.getElementById('btn-mail').href = "mailto:" + em;
+                document.getElementById('text-mail').innerText = "Send Email: " + em;
+                document.getElementById('cfg-email').value = em;
+            }
+
+            if(localStorage.getItem('card_photo')) {
+                let ph = localStorage.getItem('card_photo');
+                document.getElementById('view-photo').src = ph;
+                document.getElementById('cfg-photo').value = ph;
+            }
+
+            if(localStorage.getItem('card_logo')) {
+                let lg = localStorage.getItem('card_logo');
+                document.getElementById('view-logo').src = lg;
+                document.getElementById('cfg-logo').value = lg;
+            }
+
+            if(localStorage.getItem('admin_pass')) {
+                document.getElementById('cfg-password').value = localStorage.getItem('admin_pass');
             }
         }
 
         function saveChanges() {
             localStorage.setItem('card_title', document.getElementById('cfg-title').value);
             localStorage.setItem('card_subtitle', document.getElementById('cfg-subtitle').value);
+            localStorage.setItem('card_phone', document.getElementById('cfg-phone').value);
+            localStorage.setItem('card_wa', document.getElementById('cfg-wa').value);
+            localStorage.setItem('card_email', document.getElementById('cfg-email').value);
+            localStorage.setItem('card_photo', document.getElementById('cfg-photo').value);
+            localStorage.setItem('card_logo', document.getElementById('cfg-logo').value);
+            localStorage.setItem('admin_pass', document.getElementById('cfg-password').value);
+            
             alert('¡Cambios guardados con éxito!');
             location.reload();
         }
