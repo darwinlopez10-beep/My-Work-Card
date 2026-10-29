@@ -163,4 +163,146 @@
             font-size: 12px;
             font-weight: bold;
             display: block;
-            margin-top:
+            margin-top: 8px;
+            color: #555;
+        }
+        #admin-panel input, #admin-panel textarea {
+            width: 100%;
+            padding: 7px;
+            margin-top: 3px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- LOGOTIPO REAL DE LA EMPRESA -->
+        <div class="company-logo-container">
+            <img id="view-logo" src="logo.png" alt="López Equipment Services LLC">
+        </div>
+
+        <!-- FOTO DE PERFIL -->
+        <div class="profile-photo-container">
+            <img id="view-photo" src="mi-foto.jpg" alt="Darwin López">
+        </div>
+
+        <div class="card-content">
+            <h1 id="view-title">López Equipment Services LLC</h1>
+            <p id="view-subtitle" class="subtitle">I provide repair and maintenance services for restaurant and supermarket equipment, including grinders, saw, slicers, peelers, and meat tenderizers, among others</p>
+
+            <!-- Botones de Contacto -->
+            <a href="tel:954-864-8960" class="btn">
+                <div class="icon-circle">📞</div>
+                <div class="btn-text">Call: 954-864-8960</div>
+            </a>
+
+            <a href="https://wa.me/19548648960?text=Hello,%20I%20saw%20your%20digital%20card%20and%20I'm%20interested%20in%20your%20services." class="btn" target="_blank">
+                <div class="icon-circle">💬</div>
+                <div class="btn-text">Send WhatsApp</div>
+            </a>
+
+            <a href="mailto:Lopezeqp@gmail.com" class="btn">
+                <div class="icon-circle">📧</div>
+                <div class="btn-text">Send Email: Lopezeqp@gmail.com</div>
+            </a>
+
+            <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ADarvin%20Lopez%0AORG%3ALopez%20Equipment%20Services%20LLC%0ATITLE%3ARepair%20%26%20Maintenance%0ATEL%3BTYPE%3DWORK%2CVOICE%3A954-864-8960%0AEMAIL%3ALopezeqp%40gmail.com%0AEND%3AVCARD" download="Darwin_Lopez.vcf" class="btn">
+                <div class="icon-circle">💾</div>
+                <div class="btn-text">Save Contact</div>
+            </a>
+
+            <a href="catalogo.html" class="btn">
+                <div class="icon-circle">📋</div>
+                <div class="btn-text">View Services Catalog</div>
+            </a>
+
+            <a href="https://g.page/r/CcHY5NVRAQGzECE/review" class="btn" target="_blank">
+                <div class="icon-circle">⭐</div>
+                <div class="btn-text">Leave a Google Review</div>
+            </a>
+
+            <!-- Botón Share -->
+            <a href="#" class="btn-share" onclick="if(navigator.share){navigator.share({title: document.title, url: window.location.href.split('?')[0]}).catch(()=>{});}else{alert('Link copied to clipboard!');} return false;">
+                <span>✈️</span> Share
+            </a>
+
+            <!-- Código QR -->
+            <div class="qr-container">
+                <p>Scan to share my digital card:</p>
+                <div id="qrcode"></div>
+            </div>
+
+            <div class="contact-details">
+                <p>Florida, USA</p>
+            </div>
+
+            <!-- Panel de Administración Oculto por Seguridad -->
+            <div class="admin-footer" id="admin-container">
+                <div id="admin-panel">
+                    <h3 style="font-size:14px; color:#856404; margin-bottom:5px;">Panel de Edición Interna</h3>
+                    <label>Título:</label>
+                    <input type="text" id="cfg-title" value="López Equipment Services LLC">
+                    <label>Descripción:</label>
+                    <textarea id="cfg-subtitle" rows="2"></textarea>
+                    <button onclick="saveChanges()" style="margin-top:8px; width:100%; padding:6px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">Guardar Cambios</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Generar QR limpio sin parámetros
+        const cleanUrl = window.location.href.split('?')[0];
+        document.getElementById("qrcode").innerHTML = ""; // Limpiar QR previo por seguridad
+        new QRCode(document.getElementById("qrcode"), {
+            text: cleanUrl,
+            width: 130,
+            height: 130,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        window.onload = function() {
+            // Validar clave de administrador en la URL (ejemplo: ?admin=mi_clave_secreta_954)
+            const urlParams = new URLSearchParams(window.location.search);
+            const adminKey = urlParams.get('admin');
+            
+            // CONTRASEÑA DE ADMINISTRADOR OCULTA
+            const secretAdminPassword = "mi_clave_secreta_954";
+
+            if (adminKey === secretAdminPassword) {
+                document.getElementById('admin-container').style.display = 'block';
+            }
+
+            // Cargar datos guardados si existen en la memoria local
+            const savedTitle = localStorage.getItem('card_title');
+            const savedSubtitle = localStorage.getItem('card_subtitle');
+
+            if(savedTitle) {
+                document.getElementById('view-title').innerText = savedTitle;
+                document.getElementById('cfg-title').value = savedTitle;
+            }
+
+            if(savedSubtitle) {
+                document.getElementById('view-subtitle').innerText = savedSubtitle;
+                document.getElementById('cfg-subtitle').value = savedSubtitle;
+            } else {
+                document.getElementById('cfg-subtitle').value = document.getElementById('view-subtitle').innerText;
+            }
+        }
+
+        function saveChanges() {
+            localStorage.setItem('card_title', document.getElementById('cfg-title').value);
+            localStorage.setItem('card_subtitle', document.getElementById('cfg-subtitle').value);
+            alert('¡Cambios guardados con éxito!');
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
